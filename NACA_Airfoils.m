@@ -39,11 +39,19 @@ else
     disp('Wrong x-value');
 end
 
-
 %% Define zeta using derivative of piecewise function of camber line distribution
 
+% Define piecewise function using if statements
 
-
+if x >= 0 && x < pc 
+    dy_c = (2*m/p) - ((2*m)/(c*p^2)).*x; % 1st part of piecewise function
+    zeta = atan2(dy_c); % compute zeta
+elseif x >= pc && x <= c
+   dy_c = (2*p*m)/(1-p)^2 -((2*m)/(1-p)^2).*x;  % second portion of piecewise function
+   zeta = atan2(dy_c); % compute zeta
+else
+    disp('Wrong x-value');
+end
 
 %% Define X and Y locations over the upper and lower surfaces
 
