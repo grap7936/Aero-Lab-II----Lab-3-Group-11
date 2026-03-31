@@ -12,17 +12,24 @@ clc
 clear
 close all
 
-%% Starting Values
-NACA = 0021;
+%% Task 1 -- Numerical Representation of NAVA 4 digit airfoil
 
-% Ensure NACA is treated as a 4-digit code with leading zeros preserved
-NACA_string = sprintf('%04d', NACA);
+% Define test variables:
+m = 4/100;
+p = 4/10;
+t = 15/100;
+c = 100;
+N = 50;
 
-% Calculate the maximum camber 
-m = str2double(NACA_string(1)) / 100;
+alpha = 3; % [deg]
+v_inf = 50; % [m/s]
+Numerical_Plot = 1; % variable to turn on numerical plots for vortex panel method
 
-% Calculate the location of maximum camber 
-p = str2double(NACA_string(2)) / 10;
+% % Call numerical function to get point distribution
+ [x_b,y_b] =  NACA_Airfoils(m,p,t,c,N);
+% 
+% figure();
+% plot(x_b, y_b, "r", "LineWidth",1.5)
 
-% Calculate the thickness ratio 
-t = str2double(NACA_string(3:4)) / 100;
+% % Call vortex panel method code to get output plot
+% [CL,CP,CIRC,X,Y] = Vortex_Panel_2(x_b,y_b,v_inf,alpha,Numerical_Plot);
