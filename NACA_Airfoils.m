@@ -27,7 +27,7 @@ function [x_b,y_b] =  NACA_Airfoils(m,p,t,c,N)
 %% Define Thickness Distribution of Airfoil
 
 x = linspace(0, c, N); % x-coordinate vector with number of points denoted by input N
-y_t = ((t .* c)/0.2) * ((0.2969 .* sqrt(x./c)) - (0.3516 .* sqrt(x./c).^2) + (0.2843 .* sqrt(x./c).^3) - (0.1036 .* sqrt(x./c).^4)); % numerical equation given
+y_t = ((t * c)/0.2) * ((0.2969 .* sqrt(x./c)) -  (0.1260*(x./c)) - (0.3516 .* sqrt(x./c).^2) + (0.2843 .* sqrt(x./c).^3) - (0.1036 .* sqrt(x./c).^4)); % numerical equation given
 
 
 %% Define Camber Line Distribution 
@@ -46,12 +46,12 @@ y_L = zeros(size(x));
 % Define piecewise function using if statements
 
 for i = 1:length(x)
-    
+
     if x(i) >= 0 && x(i) < p*c  % 1st part of piecewise function
 
     y_c(i) = m * (x(i)/(p^2)) * ((2*p) - (x(i)/c)); % camber line distribution
 
-    dy_c(i) = (2*m/p) - ((2*m)/(c*p^2))*x(i); % derivative of camber line distribution
+    dy_c(i) = ((2*m)/p) - ((2*m)/(c*p^2))*x(i); % derivative of camber line distribution
 
     zeta(i) = atan(dy_c(i)); % compute zeta
 
@@ -59,7 +59,7 @@ for i = 1:length(x)
 
     y_c(i) = m * ((c-x(i))/(1-p)^2) * (1 + (x(i)/c) - (2*p)); % camber line distribution
 
-    dy_c(i) = (2*p*m)/(1-p)^2 -((2*m)/(1-p)^2)*x(i); % derivative of camber line distribution
+    dy_c(i) = (2*p*m)/(1-p)^2 -((2*m)/(c*(1-p)^2))*x(i); % derivative of camber line distribution
 
    zeta(i) = atan(dy_c(i)); % compute zeta
 
@@ -86,6 +86,7 @@ end
 % Note: we must reverse the order of all lower distributions to plot clockwise
 x_L_CW = flip(x_L);
 y_L_CW = flip(y_L);
+% y_L_CW = -1*y_L_CW;
 
 
 %% Group into final output variables
