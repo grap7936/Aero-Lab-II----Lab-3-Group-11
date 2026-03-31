@@ -26,40 +26,76 @@ function [x_b,y_b] =  NACA_Airfoils(m,p,t,c,N)
 
 %% Define Thickness Distribution of Airfoil
 
-y_t = ((t * c)/0.2) * ((0.2969 * sqrt(x./c)) - (0.3516 * sqrt(x./c).^2) + (0.2843 * sqrt(x./c).^3) - (0.1036 * sqrt(x./c).^4));
+x = linspace(0, c, N); % x-coordinate vector with number of points denoted by input N
+y_t = ((t .* c)/0.2) * ((0.2969 .* sqrt(x./c)) - (0.3516 .* sqrt(x./c).^2) + (0.2843 .* sqrt(x./c).^3) - (0.1036 .* sqrt(x./c).^4)); % numerical equation given
 
 
-%% Define Camber Line Distribution
+%% Define Camber Line Distribution 
 
-if x >= 0 && x < pc
-    y_c = m * (x./(p^2)) * ((2*p) - (x./c));
-else if x >= pc && x <= c
-    y_c = m * ((c-x)/(1-p)^2) * (1 + (x./c) - (2*p));
-else
-    disp('Wrong x-value');
-end
+% preallocate variables:
+y_c = zeros(size(x));
+dy_c = zeros(size(x));
+zeta = zeros(size(x));
 
-%% Define zeta using derivative of piecewise function of camber line distribution
+x_u = zeros(size(x));
+x_L = zeros(size(x));
+
+y_u = zeros(size(x));
+y_L = zeros(size(x));
 
 % Define piecewise function using if statements
 
-if x >= 0 && x < pc 
-    dy_c = (2*m/p) - ((2*m)/(c*p^2)).*x; % 1st part of piecewise function
-    zeta = atan2(dy_c); % compute zeta
-elseif x >= pc && x <= c
-   dy_c = (2*p*m)/(1-p)^2 -((2*m)/(1-p)^2).*x;  % second portion of piecewise function
-   zeta = atan2(dy_c); % compute zeta
-else
+for i = 1:length(x)
+    
+    if x(i) >= 0 && x(i) < p*c  % 1st part of piecewise function
+
+    y_c(i) = m * (x(i)/(p^2)) * ((2*p) - (x(i)/c)); % camber line distribution
+
+    dy_c(i) = (2*m/p) - ((2*m)/(c*p^2))*x(i); % derivative of camber line distribution
+
+    zeta(i) = atan(dy_c(i)); % compute zeta
+
+    elseif x(i) >= p*c && x(i) <= c
+
+    y_c(i) = m * ((c-x(i))/(1-p)^2) * (1 + (x(i)/c) - (2*p)); % camber line distribution
+
+    dy_c(i) = (2*p*m)/(1-p)^2 -((2*m)/(1-p)^2)*x(i); % derivative of camber line distribution
+
+   zeta(i) = atan(dy_c(i)); % compute zeta
+
+    else
+
     disp('Wrong x-value');
-end
+
+    end
+
 
 %% Define X and Y locations over the upper and lower surfaces
 
-x_u = x - y_t*sin(zeta); % x-coordinates over the upper surface
-x_L = x + y_t*sin(zeta); % x-coordinates over the lower surface
+x_u(i) = x(i) - y_t(i)*sin(zeta(i)); % x-coordinates over the upper surface
+x_L(i) = x(i) + y_t(i)*sin(zeta(i)); % x-coordinates over the lower surface
 
-y_u = y_c + y_t*sin(zeta); % y-coordinates over the upper surface
-y_L = y_c - y_t*sin(zeta); % y-coordinates over the lower surface
+y_u(i) = y_c(i) + y_t(i)*sin(zeta(i)); % y-coordinates over the upper surface
+y_L(i) = y_c(i) - y_t(i)*sin(zeta(i)); % y-coordinates over the lower surface
+
+
+
+end
+
+
+% Note: we must reverse the order of all lower distributions to plot clockwise
+x_L_CW = flip(x_L);
+y_L_CW = flip(y_L);
+
+
+%% Group into final output variables
+
+% Note: output most be clockwise starting and ending at the trailing edge
+
+x_b = [x_L_CW, x_u];
+y_b = [y_L_CW, y_u];
+
+
 
 
 
