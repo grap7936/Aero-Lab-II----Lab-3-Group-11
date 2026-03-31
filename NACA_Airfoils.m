@@ -26,15 +26,15 @@ function [x_b,y_b] =  NACA_Airfoils(m,p,t,c,N)
 
 %% Define Thickness Distribution of Airfoil
 
-y_t = ((t * c)/0.2) * ((0.2969 * sqrt(x/c)) - (0.3516 * sqrt(x/c).^2) + (0.2843 * sqrt(x/c).^3) - (0.1036 * sqrt(x/c).^4));
+y_t = ((t * c)/0.2) * ((0.2969 * sqrt(x./c)) - (0.3516 * sqrt(x./c).^2) + (0.2843 * sqrt(x./c).^3) - (0.1036 * sqrt(x./c).^4));
 
 
 %% Define Camber Line Distribution
 
 if x >= 0 && x < pc
-    y_c = m * (x/(p^2)) * ((2*p) - (x/c));
+    y_c = m * (x./(p^2)) * ((2*p) - (x./c));
 else if x >= pc && x <= c
-    y_c = m * ((c-x)/(1-p)^2) * (1 + (x/c) - (2*p));
+    y_c = m * ((c-x)/(1-p)^2) * (1 + (x./c) - (2*p));
 else
     disp('Wrong x-value');
 end
