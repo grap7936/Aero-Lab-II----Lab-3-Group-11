@@ -15,7 +15,7 @@ function [x_b,y_b] =  NACA_Airfoils(m,p,t,c,N)
 % 3.) t = max airfoil thickness. This is the last 2 digits of the 4 digit NACA airfoil
 % representation and represents the maximum thickness of the airfoil in percent of the chord.
 % 4.) c = total chord length of the airfoil
-% 5.) N= # of employed panels for vortex panel method over each surface
+% 5.) N = # of employed panels for vortex panel method over each surface
 
 % Outputs: 
 % 1.) x_b = vector containing the x-location of all airfoil boundary points
@@ -27,7 +27,7 @@ function [x_b,y_b] =  NACA_Airfoils(m,p,t,c,N)
 %% Define Thickness Distribution of Airfoil
 
 x = linspace(0, c, N); % x-coordinate vector with number of points denoted by input N
-y_t = ((t * c)/0.2) * ((0.2969 .* sqrt(x./c)) -  (0.1260*(x./c)) - (0.3516 .* sqrt(x./c).^2) + (0.2843 .* sqrt(x./c).^3) - (0.1036 .* sqrt(x./c).^4)); % numerical equation given
+y_t = ((t * c)/0.2) * ((0.2969 .* sqrt(x./c)) -  (0.1260*(x./c)) - (0.3516 .* (x./c).^2) + (0.2843 .* (x./c).^3) - (0.1036 .* (x./c).^4)); % numerical equation given
 
 
 %% Define Camber Line Distribution 
@@ -75,8 +75,8 @@ for i = 1:length(x)
 x_u(i) = x(i) - y_t(i)*sin(zeta(i)); % x-coordinates over the upper surface
 x_L(i) = x(i) + y_t(i)*sin(zeta(i)); % x-coordinates over the lower surface
 
-y_u(i) = y_c(i) + y_t(i)*sin(zeta(i)); % y-coordinates over the upper surface
-y_L(i) = y_c(i) - y_t(i)*sin(zeta(i)); % y-coordinates over the lower surface
+y_u(i) = y_c(i) + y_t(i)*cos(zeta(i)); % y-coordinates over the upper surface
+y_L(i) = y_c(i) - y_t(i)*cos(zeta(i)); % y-coordinates over the lower surface
 
 
 
@@ -87,6 +87,7 @@ end
 x_L_CW = flip(x_L);
 y_L_CW = flip(y_L);
 % y_L_CW = -1*y_L_CW;
+% x_L_CW = -x_L_CW;
 
 
 %% Group into final output variables
@@ -95,9 +96,6 @@ y_L_CW = flip(y_L);
 
 x_b = [x_L_CW, x_u];
 y_b = [y_L_CW, y_u];
-
-
-
 
 
 
