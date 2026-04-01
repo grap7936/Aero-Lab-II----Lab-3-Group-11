@@ -1,8 +1,16 @@
 %% ASEN 3802 -- Lab 3 -- Aerodynamics Lab
-%% Summary: We will model a 4 digit NACA airfoil both numerically and with an equi-angular representation and then we will use 
 
+%% Summary: 
+% Task 1:  models a 4 digit NACA airfoil both numerically and with an equi-angular representation. 
+% Task 2: Uses vortex panel code provided to find the coefficient of lift for different NACA airfoil
+% cases. Also, we will analyze where the coefficient of lift converges based on the number of panels
+% used, N.
+% Task 3: Using thin airfoil theory equations, the effects of airfoil thickness on overall lift will
+% be evaluated.
 
+%% Author(s): Graeme Appel, McKenna Coakley, Jake Wzientek, Cullen Watz
 
+%% Last Revised: 3/31/2026
 
 
 
@@ -18,18 +26,29 @@ close all
 m = 4/100;
 p = 4/10;
 t = 15/100;
-c = 100;
-N = 50;
+c = 1;
+N = 200;
 
-alpha = 3; % [deg]
+alpha = 0; % [deg]
 v_inf = 50; % [m/s]
 Numerical_Plot = 1; % variable to turn on numerical plots for vortex panel method
 
-% % Call numerical function to get point distribution
- [x_b,y_b] =  NACA_Airfoils(m,p,t,c,N);
-% 
-% figure();
-% plot(x_b, y_b, "r", "LineWidth",1.5)
+% Call numerical function to get point distribution
+[x_b, y_b] =  NACA_Airfoils(m,p,t,c,N);
 
-% % Call vortex panel method code to get output plot
-% [CL,CP,CIRC,X,Y] = Vortex_Panel_2(x_b,y_b,v_inf,alpha,Numerical_Plot);
+figure();
+plot(x_b, y_b, "r", "LineWidth",1.5)
+axis equal % implement correcting dimensions so that MATLAB does not stretch the y-axis
+xlim([0 c]) % set correct graph dimensions
+ylim([-0.2*c 0.2*c])
+grid on
+
+% Call vortex panel method code to get output plot
+[CL] = Vortex_Panel(x_b, y_b, v_inf, alpha);
+
+
+
+
+
+
+
