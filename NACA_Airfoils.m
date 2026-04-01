@@ -93,11 +93,9 @@ y_L_CW = flip(y_L);
 %% Group into final output variables
 
 % Note: output most be clockwise starting and ending at the trailing edge
-
-x_b = [x_L_CW, x_u];
-y_b = [y_L_CW, y_u];
-
-
+% gets rid of duplicate values at leading edge
+x_b = [x_L_CW, x_u(2:end)];
+y_b = [y_L_CW, y_u(2:end)];
 
 
 end
