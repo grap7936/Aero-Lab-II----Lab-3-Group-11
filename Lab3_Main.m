@@ -10,7 +10,7 @@
 
 %% Author(s): Graeme Appel, McKenna Coakley, Jake Wzientek, Cullen Watz
 
-%% Last Revised: 3/31/2026
+%% Last Revised: 4/7/2026
 
 
 
@@ -22,20 +22,48 @@ close all
 
 %% Task 1 -- Numerical Representation of NAVA 4 digit airfoil
 
-
 % Define test variables:
-m = 0;
-p = 0;
+m = 0/100;
+p = 0/10;
 t = 21/100;
 c = 1;
-N = 200;
+CL_old = 0;
+error = 1.5; 
+N = 1000;
 
-alpha = 0; % [deg]
+alpha = 12; % [deg]
 v_inf = 50; % [m/s]
 Numerical_Plot = 1; % variable to turn on numerical plots for vortex panel method
 
 % Call numerical function to get point distribution
 [x_b, y_b] =  NACA_Airfoils(m,p,t,c,N);
+
+
+% Call vortex panel method code to get output plot
+[CL_accurate] = Vortex_Panel(x_b, y_b, v_inf, alpha);
+
+N = 5; 
+while error > 1 
+
+alpha = 12; % [deg]
+v_inf = 50; % [m/s]
+Numerical_Plot = 1; % variable to turn on numerical plots for vortex panel method
+
+% Call numerical function to get point distribution
+[x_b, y_b] =  NACA_Airfoils(m,p,t,c,N);
+
+
+% Call vortex panel method code to get output plot
+[CL] = Vortex_Panel(x_b, y_b, v_inf, alpha);
+
+error = abs((CL_accurate - CL)/(CL)) * 100;
+
+if error > 1
+    N = N+1;
+    CL_old = CL;
+
+end
+end
 
 figure();
 plot(x_b, y_b, "r", "LineWidth",1.5)
@@ -44,5 +72,6 @@ xlim([0 c]) % set correct graph dimensions
 ylim([-0.2*c 0.2*c])
 grid on
 
-% Call vortex panel method code to get output plot
-[CL] = Vortex_Panel(x_b, y_b, v_inf, alpha);
+disp(['Number of total panels: ', num2str(2*N)])
+
+
