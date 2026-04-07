@@ -26,7 +26,12 @@ function [x_b,y_b] =  NACA_Airfoils(m,p,t,c,N)
 
 %% Define Thickness Distribution of Airfoil
 
-x = linspace(0, c, N); % x-coordinate vector with number of points denoted by input N
+for i=1:N+1
+
+    x(i) = D/2 + D/2 * cos(2*pi - theta*(i-1));
+
+end
+
 y_t = ((t * c)/0.2) * ((0.2969 .* sqrt(x./c)) -  (0.1260*(x./c)) - (0.3516 .* (x./c).^2) + (0.2843 .* (x./c).^3) - (0.1036 .* (x./c).^4)); % numerical equation given
 
 
