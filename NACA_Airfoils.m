@@ -28,7 +28,7 @@ function [x_b,y_b] =  NACA_Airfoils(m,p,t,c,N)
 
 for i=1:N+1
 
-    x(i) = D/2 + D/2 * cos(2*pi - theta*(i-1));
+    x(i) = c/2 + c/2 * cos(2*pi - theta*(i-1));
 
 end
 
