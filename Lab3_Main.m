@@ -75,3 +75,10 @@ grid on
 disp(['Number of total panels: ', num2str(2*N)])
 
 
+% Define test variables:
+m = 2/100;
+p = 4/10;
+t = 12/100;
+c = 1;
+
+[alpha_L0, cl] = Thin_Airfoil_Theory(m, p, t, c, N, alpha);

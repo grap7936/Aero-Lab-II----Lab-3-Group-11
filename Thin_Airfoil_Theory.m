@@ -21,7 +21,7 @@ function [alpha_L0, cl] = Thin_Airfoil_Theory(m, p, t, c, N_ideal, alpha)
 % Outputs:
 % 1.) alpha_L0 = zero lift angle of attack using thin airfoil theory
 
-
+alpha_rad = (pi/180) * alpha;
 
 %% Define Thickness Distribution of Airfoil
 
@@ -46,7 +46,7 @@ theta_0 =  acos( (1 - x.*(2/c)) );
 for i = 1:length(x)
     if m == 0 || p == 0 % for if there are any symmetric airfoil components
 
-      dz_dx(i) = 0;
+    dz_dx(i) = 0;
 
     elseif x(i) >= 0 && x(i) < p*c  % 1st part of piecewise function
 
@@ -77,7 +77,7 @@ alpha_L0 = (-1/pi)*cumtrapz(integrand); % computing alpha_L0 in [rad]
 % the same and I think this is wrong.
 for i = 1:length(alpha) 
 
-cl(i) = (2*pi)*(alpha(i) - alpha_L0(i)); % compute sectional lift coefficient with given alpha value
+cl(i) = (2*pi)*(alpha_rad(i) - alpha_L0(i)); % compute sectional lift coefficient with given alpha value
 
 end
 
