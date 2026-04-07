@@ -88,8 +88,8 @@ for i = 1:length(x)
 
 
     % Note: we must reverse the order of all lower distributions to plot clockwise
-    x_u_CW = flip(x_u);
-    y_u_CW = flip(y_u);
+    % x_u_CW = flip(x_u);
+    % y_u_CW = flip(y_u);
     % y_L_CW = -1*y_L_CW;
     % x_L_CW = -x_L_CW;
 
@@ -98,10 +98,8 @@ for i = 1:length(x)
 
     % Note: output most be clockwise starting and ending at the trailing edge
     % gets rid of duplicate values at leading edge
-    disp(length(x_u))
-    disp(length(y_u))
-    x_b = [x_u_CW, x_L(2:end)];
-    y_b = [y_u_CW, y_L(2:end)];
+    x_b = [x_L, flip(x_u(1:end-1))];
+    y_b = [y_L, flip(y_u(1:end-1))];
 
 
 end
