@@ -25,7 +25,7 @@ function [x_b,y_b] =  NACA_Airfoils(m,p,t,c,N)
 
 
 %% Define Thickness Distribution of Airfoil
-
+theta = 2*pi/N;
 for i=1:N+1
 
     x(i) = c/2 + c/2 * cos(2*pi - theta*(i-1));
