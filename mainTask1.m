@@ -27,13 +27,13 @@ m = 0/100;
 p = 0/10;
 t = 21/100;
 c = 1;
-N = 200;
+N = 50;
 
 m2 = 4/100;
 p2 = 4/10;
 t2 = 15/100;
 
-alpha = 12; % [deg]
+alpha = 0; % [deg]
 v_inf = 50; % [m/s]
 Numerical_Plot = 1; % variable to turn on numerical plots for vortex panel method
 
@@ -43,24 +43,26 @@ Numerical_Plot = 1; % variable to turn on numerical plots for vortex panel metho
 
 figure();
 subplot(2, 1, 1);
-plot(x_b, y_b, "b.", "LineWidth",1.5)
+plot(x_b, y_b, "-xb", "LineWidth",1.5)
 axis equal % implement correcting dimensions so that MATLAB does not stretch the y-axis
 xlim([0 c]) % set correct graph dimensions
 ylim([-0.2*c 0.2*c])
 grid on
 xlabel('X - Coordinates');
 ylabel('Y - Coordinates');
-title("NACA 0012")
+title("NACA 0012 Airfoil")
 
 subplot(2, 1, 2);
-plot(x_b2, y_b2, "r.", "LineWidth",1.5)
+plot(x_b2, y_b2, "-xr", "LineWidth",1.5)
 axis equal % implement correcting dimensions so that MATLAB does not stretch the y-axis
 xlim([0 c]) % set correct graph dimensions
 ylim([-0.2*c 0.2*c])
 grid on
 xlabel('X - Coordinates');
 ylabel('Y - Coordinates');
-title("NACA 2421")
+title("NACA 2421 Airfoil");
+
+print('task1', '-dpng', '-r500');
 
 
 % Call vortex panel method code to get output plot
