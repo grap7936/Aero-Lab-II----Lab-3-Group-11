@@ -1,6 +1,6 @@
 
 
-function [x_b,y_b] =  NACA_Airfoils(m,p,t,c,N)
+function [x_b,y_b,x_camber,y_camber] =  NACA_Airfoils(m,p,t,c,N)
 
 % Goal/Purpose: Modeling a 4 digit NACA airfoil representation numerically by converting 4 digit
 % inputs into relevant variables and finding discrete x and y coordinates for the top and bottom of
@@ -100,6 +100,8 @@ for i = 1:length(x)
     % gets rid of duplicate values at leading edge
     x_b = [x_L, flip(x_u(1:end-1))];
     y_b = [y_L, flip(y_u(1:end-1))];
+    x_camber = fliplr(x);
+    y_camber = fliplr(y_c);
 
 
 end
