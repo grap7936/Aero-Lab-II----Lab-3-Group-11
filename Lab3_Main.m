@@ -22,10 +22,11 @@ close all
 
 %% Task 1 -- Numerical Representation of NAVA 4 digit airfoil
 
+
 % Define test variables:
-m = 4/100;
-p = 4/10;
-t = 15/100;
+m = 0;
+p = 0;
+t = 21/100;
 c = 1;
 N = 200;
 
@@ -45,10 +46,3 @@ grid on
 
 % Call vortex panel method code to get output plot
 [CL] = Vortex_Panel(x_b, y_b, v_inf, alpha);
-
-
-
-
-
-
-
