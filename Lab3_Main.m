@@ -55,7 +55,7 @@ ylim([-0.2*c 0.2*c])
 grid on
 xlabel('X - Coordinates');
 ylabel('Y - Coordinates');
-title("NACA 0012 Airfoil")
+title("NACA 0021 Airfoil")
 legend('Airfoil', 'Camberline')
 
 subplot(2, 1, 2);
