@@ -133,5 +133,5 @@ m = 2/100;
 p = 4/10;
 t = 12/100;
 c = 1;
-
-[alpha_L0, cl] = Thin_Airfoil_Theory(m, p, t, c, N, alpha);
+N_req = N_vec(end);
+[alpha_L0, cl] = Thin_Airfoil_Theory(m, p, t, c, N_req, alpha);
