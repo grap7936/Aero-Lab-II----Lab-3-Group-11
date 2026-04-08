@@ -127,7 +127,7 @@ end
 end
 
 N_vec = 1:length(CL);
-disp(['Number of total panels: ', num2str(2*(length(N_vec)))])
+disp(['Number of total panels: ', num2str(2*(N))])
 
 % Plot the Number of panels versus the changing/converging CL value
 figure();
@@ -140,7 +140,7 @@ grid on
 % Output results to a table
 Results_Table = table( ...
     N_exact, CL_accurate, ...
-    N_vec(end), CL(end), error(end), ...
+    N, CL(end), error(end), ...
     'VariableNames', {'N_exact', 'CL_exact', 'N_predicted', 'CL_predicted', 'Percent_Error'});
 disp(Results_Table)
 
