@@ -208,65 +208,84 @@ CL_exp0012 = data2(:,2);
 
 p_0012 = polyfit(AoA_exp0012, CL_exp0012,1);
 slope_0012 = p_0012(1);
-intercept_0012 = p_0006(2);
-AoA_L0_exp0006 = -intercept_0006 / slope_0006;
+intercept_0012 = p_0012(2);
+AoA_L0_exp0012 = -intercept_0012 / slope_0012;
 
 data3 = load("NACA2412.mat");
 data3 = data3.data;
 AoA_exp2412 = data3(:,1);
-CL_exp2412 = data3(1,:);
+CL_exp2412 = data3(:,2);
+
+p_2412 = polyfit(AoA_exp2412, CL_exp2412,1);
+slope_2412 = p_2412(1);
+intercept_2412 = p_2412(2);
+AoA_L0_exp2412 = -intercept_2412 / slope_2412;
 
 data4 = load("NACA4412.mat");
 data4 = data4.data;
 AoA_exp4412 = data4(:,1);
-CL_exp4412 = data4(1,:);
+CL_exp4412 = data4(:,2);
 
+p_4412 = polyfit(AoA_exp4412, CL_exp4412,1);
+slope_4412 = p_4412(1);
+intercept_4412 = p_4412(2);
+AoA_L0_exp4412 = -intercept_4412 / slope_4412;
+
+% plot CL over alpha for all methods:
+
+figure()
 
 % Create output tables
-% Output table comparing zero lift angle of attack for each case
+
+% ---------------- Zero Lift Angle of Attack Tables ----------------
 
 % NACA 0006 Airfoil
+disp('Table: Zero-Lift Angle of Attack Comparison for NACA 0006 (deg)')
 Results_Table = table( ...
     alpha_L0_vort_0006, alpha_L0_thin_0006, AoA_L0_exp0006, ...
     'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory', 'Experimental_Data'});
 disp(Results_Table)
 
 % NACA 0012 Airfoil
+disp('Table: Zero-Lift Angle of Attack Comparison for NACA 0012 (deg)')
 Results_Table = table( ...
     alpha_L0_vort_0012, alpha_L0_thin_0012, AoA_L0_exp0012, ...
     'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory', 'Experimental_Data'});
 disp(Results_Table)
 
-% NACA 0018 Airfoil -- Note experimental data does not exist for this configuration
+% NACA 0018 Airfoil
+disp('Table: Zero-Lift Angle of Attack Comparison for NACA 0018 (deg)')
 Results_Table = table( ...
     alpha_L0_vort_0018, alpha_L0_thin_0018, ...
     'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory'});
 disp(Results_Table)
 
 
-% Output table comparing lift curve slope for each case
+% ---------------- Lift Curve Slope Tables ----------------
 
 % NACA 0006 Airfoil
+disp('Table: Lift Curve Slope Comparison for NACA 0006 (1/deg)')
 Results_Table = table( ...
-    slope_vort_0006, slope_thin_0006, AoA_exp0006(1), ...
+    slope_vort_0006, slope_thin_0006, slope_0006, ...
     'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory', 'Experimental_Data'});
 disp(Results_Table)
 
 % NACA 0012 Airfoil
+disp('Table: Lift Curve Slope Comparison for NACA 0012 (1/deg)')
 Results_Table = table( ...
-    slope_vort_0012, slope_thin_0012, AoA_exp0012(1), ...
+    slope_vort_0012, slope_thin_0012, slope_0012, ...
     'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory', 'Experimental_Data'});
 disp(Results_Table)
 
-% NACA 0018 Airfoil -- Note experimental data does not exist for this configuration
+% NACA 0018 Airfoil
+disp('Table: Lift Curve Slope Comparison for NACA 0018 (1/deg)')
 Results_Table = table( ...
     slope_vort_0018, slope_thin_0018, ...
     'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory'});
 disp(Results_Table)
 
 
-
-
+%% Task 4
 
 %% User Defined Functions
 
@@ -607,10 +626,10 @@ end
 
 % calculate lift slope for both vortex and thin airfoil methods:
 
-p_thin = polyfit(alpha_rad, cl_thin, 1); % ensure both alpha inputs and cl_thin inputs have units of radians
+p_thin = polyfit(alpha_vec, cl_thin, 1); % ensure both alpha inputs and cl_thin inputs have units of degrees
 slope_thin = p_thin(1);
 
-p_vort = polyfit(alpha_rad, CL_vort,1);  % ensure both alpha inputs and cl_thin inputs have units of radians
+p_vort = polyfit(alpha_vec, CL_vort,1);  % ensure both alpha inputs and cl_thin inputs have units of degrees
 slope_vort = p_vort(1);
 intercept_vort = p_vort(2);
 alpha_L0_vort = -intercept_vort / slope_vort; % not sure if this is right. should AoA L0 be a vector or one value?
