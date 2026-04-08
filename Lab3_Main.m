@@ -134,4 +134,27 @@ p = 4/10;
 t = 12/100;
 c = 1;
 N_req = N_vec(end);
-[alpha_L0, cl] = Thin_Airfoil_Theory(m, p, t, c, N_req, alpha);
+[alpha_L0, cl_thin, CL_vort, slope_thin, slope_vort] = Thin_Airfoil_Theory(m, p, t, c, N_req, alpha, v_inf);
+%-8 degrees to 8 degrees
+% experimental data from digitizer
+data1 = load("NACA0006.mat");
+data1 = data1.data;
+AoA_exp0006 = data1(:,1);
+CL_exp0006 = data1(1,:);
+
+data2 = load("NACA0012.mat");
+data2 = data2.data;
+AoA_exp0012 = data2(:,1);
+CL_exp0012 = data2(1,:);
+
+data3 = load("NACA2412.mat");
+data3 = data3.data;
+AoA_exp2412 = data3(:,1);
+CL_exp2412 = data3(1,:);
+
+data4 = load("NACA4412.mat");
+data4 = data4.data;
+AoA_exp4412 = data4(:,1);
+CL_exp4412 = data4(1,:);
+
+

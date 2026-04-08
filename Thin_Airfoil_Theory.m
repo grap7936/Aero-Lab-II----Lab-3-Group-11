@@ -1,5 +1,5 @@
 
-function [alpha_L0, cl] = Thin_Airfoil_Theory(m, p, t, c, N_ideal, alpha)
+function [alpha_L0, cl_thin, CL_vort, slope_thin, slope_vort] = Thin_Airfoil_Theory(m, p, t, c, N_ideal, alpha,v_inf)
 
 % Goal/Purpose: Find zero lift angle of attack using thin airfoil theory and computing equation 4.61
 % in anderson. Note that we already have dz/dx from previous derivation input piecewise into our
@@ -21,7 +21,8 @@ function [alpha_L0, cl] = Thin_Airfoil_Theory(m, p, t, c, N_ideal, alpha)
 % Outputs:
 % 1.) alpha_L0 = zero lift angle of attack using thin airfoil theory
 
-alpha_rad = (pi/180) * alpha;
+alpha_vec = linspace(-8,8,N_ideal); %create an angle of attack vector cooresponding to experimental trends
+alpha_rad = (pi/180) .* alpha_vec;
 
 %% Define Thickness Distribution of Airfoil
 
@@ -73,15 +74,21 @@ integrand = dz_dx.*(cos(theta_0) - 1);
 alpha_L0 = (-1/pi)*cumtrapz(integrand); % computing alpha_L0 in [rad]
 
 % loop through for a range of changing alpha values 
-% Note: currently, the length of alpha as well as the length of x defined above in line 32 must be
-% the same and I think this is wrong.
-for i = 1:length(alpha) 
 
-cl(i) = (2*pi)*(alpha_rad(i) - alpha_L0(i)); % compute sectional lift coefficient with given alpha value
+[x_b, y_b] =  NACA_Airfoils(m,p,t,c,N_ideal);
 
+alpha_L0(end) = [];
+for i = 1:length(alpha_L0) 
+CL_vort(i) = Vortex_Panel(x_b, y_b, v_inf, alpha_vec(i));
+cl_thin(i) = (2*pi)*(alpha_rad(i) - alpha_L0(i)); % compute sectional lift coefficient with given alpha value
 end
 
-% recall that lift slope for each case is a = 2*pi
+% calculate lift slope for both vortex and thin airfoil methods:
 
+p_thin = polyfit(alpha_vec, cl_thin, 1);
+slope_thin = p_thin(1);
+
+p_vort = polyfit(alpha_vec, CL_vort,1);
+slope_vort = p_vort(1);
 
 end
