@@ -180,17 +180,13 @@ N_req = N_vec(end); % vortex panels required is the last value of the converging
 [alpha_L0_thin_0018, alpha_L0_vort_0018, cl_thin_0018, CL_vort_0018, slope_thin_0018, slope_vort_0018] = Thin_Airfoil_Theory(m, p, t, c, N_req, alpha, v_inf);
 
 
-% Read in experimental data
-% experimental data from digitizer
+% Read in experimental data experimental data from digitizer
 data1 = load("NACA0006.mat");
 data1 = data1.data;
 AoA_exp0006 = data1(:,1);
 CL_exp0006 = data1(:,2);
 
-% % Find the measured angle of attack value (i.e AoA_exp0006) that occurs when the CL values are
-% % closest to 0 (for zero lift angle of attack)
-% [~, alpha_index_0006] = min(abs(CL_exp0006)); % finds index where CL is closest to 0
-% AoA_L0_exp0006 = AoA_exp0006(alpha_index_0006); % Use this value for table comparison
+% find L=0 AoA using a polyfit
 
 p_0006 = polyfit(AoA_exp0006, CL_exp0006,1);
 slope_0006 = p_0006(1);
@@ -202,9 +198,7 @@ data2 = data2.data;
 AoA_exp0012 = data2(:,1);
 CL_exp0012 = data2(:,2);
 
-% % Find the measured angle of attack value (i.e AoA_exp0006) that occurs when the CL values crosses 0
-% [~, alpha_index_0012] = min(abs(CL_exp0012)); % finds index where CL is closest to 0
-% AoA_L0_exp0012 = AoA_exp0012(alpha_index_0012); % Use this value for table comparison
+% find L=0 AoA using a polyfit
 
 p_0012 = polyfit(AoA_exp0012, CL_exp0012,1);
 slope_0012 = p_0012(1);
@@ -234,10 +228,33 @@ AoA_L0_exp4412 = -intercept_4412 / slope_4412;
 % plot CL over alpha for all methods:
 
 figure()
+hold on
 
-% Create output tables
+alpha_vec = linspace(-8,8,N_req);
 
-% ---------------- Zero Lift Angle of Attack Tables ----------------
+% NACA 0018
+plot(alpha_vec, CL_vort_0018, 'r-', 'DisplayName','0018 Vortex')
+plot(alpha_vec, cl_thin_0018, 'r--', 'DisplayName','0018 Thin')
+
+% NACA 0012 
+plot(alpha_vec, CL_vort_0012, 'b-', 'DisplayName','0012 Vortex')
+plot(alpha_vec, cl_thin_0012, 'b--', 'DisplayName','0012 Thin')
+plot(AoA_exp0012, CL_exp0012, 'b-o', 'DisplayName','0012 Exp')
+
+% NACA 0006
+plot(alpha_vec, CL_vort_0006, 'g-', 'DisplayName','0006 Vortex')
+plot(alpha_vec, cl_thin_0006, 'g--', 'DisplayName','0006 Thin')
+plot(AoA_exp0006, CL_exp0006, 'g-o', 'DisplayName','0006 Exp')
+
+hold off
+
+xlabel('\alpha (deg)')
+ylabel('C_L')
+title('C_L vs \alpha for Symmetric Airfoils')
+legend('Location','best')
+grid on
+
+% Zero Lift Angle of Attack Tables 
 
 % NACA 0006 Airfoil
 disp('Table: Zero-Lift Angle of Attack Comparison for NACA 0006 (deg)')
@@ -261,7 +278,7 @@ Results_Table = table( ...
 disp(Results_Table)
 
 
-% ---------------- Lift Curve Slope Tables ----------------
+% Lift Curve Slope Tables
 
 % NACA 0006 Airfoil
 disp('Table: Lift Curve Slope Comparison for NACA 0006 (1/deg)')
@@ -285,7 +302,97 @@ Results_Table = table( ...
 disp(Results_Table)
 
 
-%% Task 4
+%% Task 4 (cambered airfoils)
+
+%  Call thin airfoil theory function for each different airfoil case 
+
+
+% NACA 2412 (Moderately Cambered)
+m = 2/100; p = 4/10; t = 12/100; c = 1;
+
+[alpha_L0_thin_2412, alpha_L0_vort_2412, cl_thin_2412, CL_vort_2412, slope_thin_2412, slope_vort_2412] = Thin_Airfoil_Theory(m,p,t,c,N_req,alpha,v_inf);
+
+
+% NACA 4412 (Highly Cambered)
+m = 4/100; p = 4/10; t = 12/100; c = 1;
+
+[alpha_L0_thin_4412, alpha_L0_vort_4412, cl_thin_4412, CL_vort_4412, slope_thin_4412, slope_vort_4412] = Thin_Airfoil_Theory(m,p,t,c,N_req,alpha,v_inf);
+
+
+% Plot
+
+figure()
+hold on
+
+alpha_vec = linspace(-8,8,N_req);
+
+% NACA 0012
+plot(alpha_vec, CL_vort_0012, 'b-', 'DisplayName','0012 Vortex')
+plot(alpha_vec, cl_thin_0012, 'b--', 'DisplayName','0012 Thin')
+plot(AoA_exp0012, CL_exp0012, 'b^', 'LineStyle','none', 'DisplayName','0012 Exp')
+
+% NACA 2412 
+plot(alpha_vec, CL_vort_2412, 'r-', 'DisplayName','2412 Vortex')
+plot(alpha_vec, cl_thin_2412, 'r--', 'DisplayName','2412 Thin')
+plot(AoA_exp2412, CL_exp2412, 'r^', 'LineStyle','none', 'DisplayName','2412 Exp')
+
+% NACA 4412
+plot(alpha_vec, CL_vort_4412, 'g-', 'DisplayName','4412 Vortex')
+plot(alpha_vec, cl_thin_4412, 'g--', 'DisplayName','4412 Thin')
+plot(AoA_exp4412, CL_exp4412, 'g^', 'LineStyle','none', 'DisplayName','4412 Exp')
+
+hold off
+
+xlabel('\alpha (deg)')
+ylabel('C_L')
+title('C_L vs \alpha for Cambered Airfoils')
+legend('Location','best')
+grid on
+
+% Zero Lift Angle of Attack Tables
+% NACA 0012 Airfoil
+disp('Table: Zero-Lift Angle of Attack Comparison for NACA 0012 (deg)')
+Results_Table = table( ...
+    alpha_L0_vort_0012, alpha_L0_thin_0012, AoA_L0_exp0012, ...
+    'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory', 'Experimental_Data'});
+disp(Results_Table)
+
+% NACA 2412 Airfoil
+disp('Table: Zero-Lift Angle of Attack Comparison for NACA 2412 (deg)')
+Results_Table = table( ...
+    alpha_L0_vort_2412, alpha_L0_thin_2412, AoA_L0_exp2412, ...
+    'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory', 'Experimental_Data'});
+disp(Results_Table)
+
+% NACA 4412 Airfoil
+disp('Table: Zero-Lift Angle of Attack Comparison for NACA 4412 (deg)')
+Results_Table = table( ...
+    alpha_L0_vort_4412, alpha_L0_thin_4412, AoA_L0_exp4412, ...
+    'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory', 'Experimental_Data'});
+disp(Results_Table)
+
+
+% Lift Curve Slope Tables
+% NACA 0012 Airfoil
+disp('Table: Lift Curve Slope Comparison for NACA 0012 (1/deg)')
+Results_Table = table( ...
+    slope_vort_0012, slope_thin_0012, slope_0012, ...
+    'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory', 'Experimental_Data'});
+disp(Results_Table)
+
+% NACA 2412 Airfoil
+disp('Table: Lift Curve Slope Comparison for NACA 2412 (1/deg)')
+Results_Table = table( ...
+    slope_vort_2412, slope_thin_2412, slope_2412, ...
+    'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory', 'Experimental_Data'});
+disp(Results_Table)
+
+% NACA 4412 Airfoil
+disp('Table: Lift Curve Slope Comparison for NACA 4412 (1/deg)')
+Results_Table = table( ...
+    slope_vort_4412, slope_thin_4412, slope_4412, ...
+    'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory', 'Experimental_Data'});
+disp(Results_Table)
 
 %% User Defined Functions
 
@@ -621,7 +728,7 @@ alpha_L0_thin = (-1/pi) * trapz(theta_0, integrand); % computing zero lift angle
 % loop over all alpha vector values to get vector outputs of CL and cl for each alpha case
 for i = 1:length(alpha_vec) 
 CL_vort(i) = Vortex_Panel(x_b, y_b, v_inf, alpha_vec(i));
-cl_thin(i) = (2*pi)*(alpha_rad(i) - alpha_L0_thin); % compute sectional lift coefficient with given alpha value (note: alpha_L0 should be constant, only alpha input indexes)
+cl_thin(i) = (2*pi)*(alpha_rad(i) - -alpha_L0_thin); % compute sectional lift coefficient with given alpha value (note: alpha_L0 should be constant, only alpha input indexes)
 end
 
 % calculate lift slope for both vortex and thin airfoil methods:
@@ -634,4 +741,5 @@ slope_vort = p_vort(1);
 intercept_vort = p_vort(2);
 alpha_L0_vort = -intercept_vort / slope_vort; % not sure if this is right. should AoA L0 be a vector or one value?
 
+alpha_L0_thin = -(180/pi) .* alpha_L0_thin;
 end

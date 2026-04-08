@@ -180,52 +180,46 @@ N_req = N_vec(end); % vortex panels required is the last value of the converging
 [alpha_L0_thin_0018, alpha_L0_vort_0018, cl_thin_0018, CL_vort_0018, slope_thin_0018, slope_vort_0018] = Thin_Airfoil_Theory(m, p, t, c, N_req, alpha, v_inf);
 
 
-% Read in experimental data
-% experimental data from digitizer
+% Read in experimental data experimental data from digitizer for each airfoil
+
 data1 = load("NACA0006.mat");
 data1 = data1.data;
 AoA_exp0006 = data1(:,1);
 CL_exp0006 = data1(:,2);
-
-% % Find the measured angle of attack value (i.e AoA_exp0006) that occurs when the CL values are
-% % closest to 0 (for zero lift angle of attack)
-% [~, alpha_index_0006] = min(abs(CL_exp0006)); % finds index where CL is closest to 0
-% AoA_L0_exp0006 = AoA_exp0006(alpha_index_0006); % Use this value for table comparison
-
+% find L=0 AoA using a polyfit
 p_0006 = polyfit(AoA_exp0006, CL_exp0006,1);
 slope_0006 = p_0006(1);
 intercept_0006 = p_0006(2);
 AoA_L0_exp0006 = -intercept_0006 / slope_0006;
 
+% read data
 data2 = load("NACA0012.mat");
 data2 = data2.data;
 AoA_exp0012 = data2(:,1);
 CL_exp0012 = data2(:,2);
-
-% % Find the measured angle of attack value (i.e AoA_exp0006) that occurs when the CL values crosses 0
-% [~, alpha_index_0012] = min(abs(CL_exp0012)); % finds index where CL is closest to 0
-% AoA_L0_exp0012 = AoA_exp0012(alpha_index_0012); % Use this value for table comparison
-
+% find L=0 AoA using a polyfit
 p_0012 = polyfit(AoA_exp0012, CL_exp0012,1);
 slope_0012 = p_0012(1);
 intercept_0012 = p_0012(2);
 AoA_L0_exp0012 = -intercept_0012 / slope_0012;
 
+% read data
 data3 = load("NACA2412.mat");
 data3 = data3.data;
 AoA_exp2412 = data3(:,1);
 CL_exp2412 = data3(:,2);
-
+% find L=0 AoA using a polyfit
 p_2412 = polyfit(AoA_exp2412, CL_exp2412,1);
 slope_2412 = p_2412(1);
 intercept_2412 = p_2412(2);
 AoA_L0_exp2412 = -intercept_2412 / slope_2412;
 
+% read data
 data4 = load("NACA4412.mat");
 data4 = data4.data;
 AoA_exp4412 = data4(:,1);
 CL_exp4412 = data4(:,2);
-
+% find L=0 AoA using a polyfit
 p_4412 = polyfit(AoA_exp4412, CL_exp4412,1);
 slope_4412 = p_4412(1);
 intercept_4412 = p_4412(2);
@@ -259,9 +253,8 @@ ylabel('C_L')
 title('C_L vs \alpha for Symmetric Airfoils')
 legend('Location','best')
 grid on
-% Create output tables
 
-% ---------------- Zero Lift Angle of Attack Tables ----------------
+% Zero Lift Angle of Attack Tables 
 
 % NACA 0006 Airfoil
 disp('Table: Zero-Lift Angle of Attack Comparison for NACA 0006 (deg)')
@@ -285,7 +278,7 @@ Results_Table = table( ...
 disp(Results_Table)
 
 
-% ---------------- Lift Curve Slope Tables ----------------
+% Lift Curve Slope Tables
 
 % NACA 0006 Airfoil
 disp('Table: Lift Curve Slope Comparison for NACA 0006 (1/deg)')
@@ -309,9 +302,7 @@ Results_Table = table( ...
 disp(Results_Table)
 
 
-%% Task 4
-
-%% Task 4
+%% Task 4 (cambered airfoils)
 
 %  Call thin airfoil theory function for each different airfoil case 
 
@@ -328,24 +319,24 @@ m = 4/100; p = 4/10; t = 12/100; c = 1;
 [alpha_L0_thin_4412, alpha_L0_vort_4412, cl_thin_4412, CL_vort_4412, slope_thin_4412, slope_vort_4412] = Thin_Airfoil_Theory(m,p,t,c,N_req,alpha,v_inf);
 
 
-% -------- Plot --------
+% Plot
 
 figure()
 hold on
 
 alpha_vec = linspace(-8,8,N_req);
 
-% --- NACA 0012 (BLUE) ---
+% NACA 0012
 plot(alpha_vec, CL_vort_0012, 'b-', 'DisplayName','0012 Vortex')
 plot(alpha_vec, cl_thin_0012, 'b--', 'DisplayName','0012 Thin')
 plot(AoA_exp0012, CL_exp0012, 'b^', 'LineStyle','none', 'DisplayName','0012 Exp')
 
-% --- NACA 2412 (RED) ---
+% NACA 2412 
 plot(alpha_vec, CL_vort_2412, 'r-', 'DisplayName','2412 Vortex')
 plot(alpha_vec, cl_thin_2412, 'r--', 'DisplayName','2412 Thin')
 plot(AoA_exp2412, CL_exp2412, 'r^', 'LineStyle','none', 'DisplayName','2412 Exp')
 
-% --- NACA 4412 (GREEN) ---
+% NACA 4412
 plot(alpha_vec, CL_vort_4412, 'g-', 'DisplayName','4412 Vortex')
 plot(alpha_vec, cl_thin_4412, 'g--', 'DisplayName','4412 Thin')
 plot(AoA_exp4412, CL_exp4412, 'g^', 'LineStyle','none', 'DisplayName','4412 Exp')
@@ -358,8 +349,7 @@ title('C_L vs \alpha for Cambered Airfoils')
 legend('Location','best')
 grid on
 
-% ---------------- Zero Lift Angle of Attack Tables ----------------
-
+% Zero Lift Angle of Attack Tables
 % NACA 0012 Airfoil
 disp('Table: Zero-Lift Angle of Attack Comparison for NACA 0012 (deg)')
 Results_Table = table( ...
@@ -382,8 +372,7 @@ Results_Table = table( ...
 disp(Results_Table)
 
 
-% ---------------- Lift Curve Slope Tables ----------------
-
+% Lift Curve Slope Tables
 % NACA 0012 Airfoil
 disp('Table: Lift Curve Slope Comparison for NACA 0012 (1/deg)')
 Results_Table = table( ...
