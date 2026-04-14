@@ -1,0 +1,87 @@
+clc
+clear
+close all
+
+a0_t = 2*pi;
+a0_r = 2*pi; 
+aero_t = 8; 
+aero_r = 8;  
+geo_t = 15; 
+geo_r = 15; 
+N = 100;     
+b = 1;
+AR_vec = [4 6 8 10];
+taper_ratio = linspace(0.01,1,100);
+delta = zeros(length(AR_vec), length(taper_ratio));
+
+for k = 1:length(AR_vec)
+    AR = AR_vec(k);
+for i = 1:length(taper_ratio)
+    c_r = (2*b)./ (AR * (1+taper_ratio(i)));
+    c_t = taper_ratio(i) * c_r;
+    [e,c_L,c_Di, delta(k,i)] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N);
+end
+end
+figure; hold on; grid on;
+
+plot(taper_ratio, delta(1,:), 'LineWidth', 2);
+plot(taper_ratio, delta(2,:), 'LineWidth', 2);
+plot(taper_ratio, delta(3,:), 'LineWidth', 2);
+plot(taper_ratio, delta(4,:), 'LineWidth', 2);
+xlabel('Taper Ratio (c_t/c_r)')
+ylabel('\delta')
+title('Effect of Aspect Ratio and Taper Ratio on \delta')
+legend('AR = 4','AR = 6','AR = 8','AR = 10','Location','best')
+
+function [e,c_L,c_Di,delta] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N)
+
+aero_t = aero_t * (pi/180);
+aero_r = aero_r * (pi/180);
+geo_t = geo_t * (pi/180);
+geo_r = geo_r * (pi/180);
+
+
+thetas = (1:N) * pi/(2*N); 
+n = 1:2:(2*N-1);
+
+y = (b/2) .* cos(thetas);
+y_normalized = abs(y)/(b/2);
+
+c = c_r + (c_t - c_r) .* y_normalized;
+a0 = a0_r + (a0_t - a0_r) .* y_normalized;
+AoA_L0 = aero_r + (aero_t - aero_r) .* y_normalized;
+AoA_geo = geo_r + (geo_t - geo_r) .* y_normalized;
+
+% [b] = [A][x] where [x] contain fourier coefficients A1, A2 ....
+b_vec = (AoA_geo - AoA_L0)';
+% i corresponds to theta, j corresponds to N
+for i = 1:length(n)
+    for j = 1:length(n)
+        A_mat(i,j) = ((4*b)/(a0(i)*c(i))* sin(n(j)*thetas(i)) + (n(j) * ...
+            (sin(n(j)*thetas(i))/sin(thetas(i)))));
+    end
+end
+
+% x corresponds to A
+x = A_mat\b_vec;
+
+delta = 0;
+for i = 2:length(n)
+    delta = delta + (n(i) * (x(i)/x(1))^2);
+end
+
+e = 1 / (1 + delta);
+
+S = (b/2)*(c_r + c_t);
+AR = b^2/S;
+c_L = x(1)*pi*AR;
+
+
+sum = 0; % Initialize sum for c_Di calculation
+for i = 1:length(n)
+    sum = sum + (n(i) * x(i)^2) * (pi/2);
+    c_Di = ((2*b^2)/S) * sum;
+end
+
+
+end
