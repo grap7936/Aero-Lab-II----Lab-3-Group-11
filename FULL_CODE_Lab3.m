@@ -256,7 +256,7 @@ disp(Results_Table)
 
 % ---------------- PART 2 -------------------------
 
-
+% example inputs to test PLLT function
 a0_t = 2*pi;
 a0_r = 2*pi; 
 aero_t = 8; 
@@ -265,13 +265,15 @@ geo_t = 15;
 geo_r = 15; 
 N = 100;     
 b = 1;
+% define specified AR and taper ratio values to replicate Anderson figure 5.20
 AR_vec = [4 6 8 10];
 taper_ratio = linspace(0.01,1,100);
+% Preallocate delta for plot
 delta = zeros(length(AR_vec), length(taper_ratio));
 
 for k = 1:length(AR_vec)
     AR = AR_vec(k);
-for i = 1:length(taper_ratio)
+for i = 1:length(taper_ratio) % compute geometric inputs based on AR and taper ratio
     c_r = (2*b)./ (AR * (1+taper_ratio(i)));
     c_t = taper_ratio(i) * c_r;
     [e(k,i),c_L,c_Di] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N);
@@ -279,7 +281,7 @@ for i = 1:length(taper_ratio)
 end
 end
 figure; hold on; grid on;
-
+% Anderson 5.20 plot
 plot(taper_ratio, delta(1,:), 'LineWidth', 2);
 plot(taper_ratio, delta(2,:), 'LineWidth', 2);
 plot(taper_ratio, delta(3,:), 'LineWidth', 2);
@@ -643,7 +645,9 @@ end
 %% 4.) Prandtl Lifting Line Theory Code
 % Goal/Purpose: Analyze the performance of a finite wing by modeling a sheet of bound
 % horseshoe vortex filaments. It solves the fundamental equation of
-% Prandtl's Lifitng Line Theory for finite wings with thick airfoils.
+% Prandtl's Lifitng Line Theory for finite wings with thick airfoils to find the fourier
+% coefficients, which can then be used to solve for various performace
+% perameters such as e, CL, and CDi.
 
 % Inputs: 
 % 1.) b = wing span (ft)
@@ -658,24 +662,25 @@ end
 % 10.) N = number of odd terms to include in the series expansion for circulation
 
 % Outputs:
-% 1.)  e = span efficiency factor
+% 1.) e = span efficiency factor
 % 2.) C_L = coefficient of lift 
 % 3.) C_Di = induced coefficient of drag 
 
 function [e,c_L,c_Di,delta] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N)
-
+% convert angles of attack to radians
 aero_t = aero_t * (pi/180);
 aero_r = aero_r * (pi/180);
 geo_t = geo_t * (pi/180);
 geo_r = geo_r * (pi/180);
 
-
+% satisfying the fundamental equation at N locations
 thetas = (1:N) * pi/(2*N); 
+% using odd terms
 n = 1:2:(2*N-1);
-
+% non-dimensionalize distance along the wing
 y = (b/2) .* cos(thetas);
 y_normalized = abs(y)/(b/2);
-
+% create linear spans along wing of inputs based on non-dimensionalization
 c = c_r + (c_t - c_r) .* y_normalized;
 a0 = a0_r + (a0_t - a0_r) .* y_normalized;
 AoA_L0 = aero_r + (aero_t - aero_r) .* y_normalized;
@@ -684,6 +689,7 @@ AoA_geo = geo_r + (geo_t - geo_r) .* y_normalized;
 % [b] = [A][x] where [x] contain fourier coefficients A1, A2 ....
 b_vec = (AoA_geo - AoA_L0)';
 % i corresponds to theta, j corresponds to N
+% generate A matrix using the fundamental equation of PLLT
 for i = 1:length(n)
     for j = 1:length(n)
         A_mat(i,j) = ((4*b)/(a0(i)*c(i))* sin(n(j)*thetas(i)) + (n(j) * ...
@@ -691,22 +697,24 @@ for i = 1:length(n)
     end
 end
 
-% x corresponds to A
+% x corresponds to Fourier coefficient column vector
 x = A_mat\b_vec;
-
+% solve for delta using solved Fourier Coefficients
 delta = 0;
 for i = 2:length(n)
     delta = delta + (n(i) * (x(i)/x(1))^2);
 end
-
+% span efficiency factor
 e = 1 / (1 + delta);
-
+% planform area
 S = (b/2)*(c_r + c_t);
+% Aspect ratio
 AR = b^2/S;
+% Solve for coefficient of lift using first fourier term
 c_L = x(1)*pi*AR;
 
-
-sum = 0; % Initialize sum for c_Di calculation
+% compute Cdi by summing fourier coefficients
+sum = 0;
 for i = 1:length(n)
     sum = sum + (n(i) * x(i)^2) * (pi/2);
     c_Di = ((2*b^2)/S) * sum;
