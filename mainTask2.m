@@ -19,7 +19,8 @@ for k = 1:length(AR_vec)
 for i = 1:length(taper_ratio)
     c_r = (2*b)./ (AR * (1+taper_ratio(i)));
     c_t = taper_ratio(i) * c_r;
-    [e,c_L,c_Di, delta(k,i)] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N);
+    [e(k,i),c_L,c_Di] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N);
+    delta(k,i) = (1/e(k,i)) - 1;
 end
 end
 figure; hold on; grid on;
