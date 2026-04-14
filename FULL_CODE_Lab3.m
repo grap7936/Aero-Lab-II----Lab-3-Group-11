@@ -1,18 +1,19 @@
 %% ASEN 3802 -- Lab 3 -- Aerodynamics Lab
 
-%% Summary: 
+%% Summary:
+% -- PART 1--
 % Task 1:  models a 4 digit NACA airfoil both numerically and with an equi-angular representation. 
 % Task 2: Uses vortex panel code provided to find the coefficient of lift for different NACA airfoil
 % cases. Also, we will analyze where the coefficient of lift converges based on the number of panels
 % used, N.
 % Task 3: Using thin airfoil theory equations, the effects of airfoil thickness on overall lift will
 % be evaluated.
+% -- PART 2 --
+% Task 1: Created Pradtl's lifting line theory function and recreated Anderson 5.20 plot to validate
 
 %% Author(s): Graeme Appel, McKenna Coakley, Jake Wzientek, Cullen Watz
 
-%% Last Revised: 4/7/2026
-
-
+%% Last Revised: 4/14/2026
 
 
 %% Housekeeping
@@ -254,7 +255,7 @@ Results_Table = table( ...
     'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory'});
 disp(Results_Table)
 
-% ---------------- PART 2 -------------------------
+%% ---------------- PART 2 -------------------------
 
 % example inputs to test PLLT function
 a0_t = 2*pi;
@@ -331,7 +332,7 @@ end
 y_t = ((t * c)/0.2) * ((0.2969 .* sqrt(x./c)) -  (0.1260*(x./c)) - (0.3516 .* (x./c).^2) + (0.2843 .* (x./c).^3) - (0.1036 .* (x./c).^4)); % numerical equation given
 %disp(length(y_t));
 
-%% Define Camber Line Distribution 
+% Define Camber Line Distribution 
 
 % preallocate variables:
 y_c = zeros(size(x));
@@ -374,7 +375,7 @@ for i = 1:length(x)
     end
 
 
-    %% Define X and Y locations over the upper and lower surfaces
+    % Define X and Y locations over the upper and lower surfaces
 
         x_u(i) = x(i) - y_t(i)*sin(zeta(i)); % x-coordinates over the upper surface
         x_L(i) = x(i) + y_t(i)*sin(zeta(i)); % x-coordinates over the lower surface
@@ -392,7 +393,7 @@ for i = 1:length(x)
     % x_L_CW = -x_L_CW;
 
 
-    %% Group into final output variables
+    % Group into final output variables
 
     % Note: output most be clockwise starting and ending at the trailing edge
     % gets rid of duplicate values at leading edge
@@ -569,7 +570,7 @@ function [alpha_L0_thin, alpha_L0_vort, cl_thin, CL_vort, slope_thin, slope_vort
 alpha_vec = linspace(-8,8,N_ideal); %create an angle of attack vector cooresponding to experimental trends
 alpha_rad = (pi/180) .* alpha_vec;
 
-%% Define Thickness Distribution of Airfoil
+% Define Thickness Distribution of Airfoil
 
 % Equiangular distribution
 for i = 1:N_ideal+1 
@@ -582,12 +583,12 @@ end
 
 % y_t = ((t * c)/0.2) * ((0.2969 .* sqrt(x./c)) -  (0.1260*(x./c)) - (0.3516 .* (x./c).^2) + (0.2843 .* (x./c).^3) - (0.1036 .* (x./c).^4)); % numerical equation
 
-%% Define theta_0 in terms of x using chord line equation:
+% Define theta_0 in terms of x using chord line equation:
 
 theta_0 =  acos( (1 - x.*(2/c)) );
 
 
-%% Define dz/dx for each part of the piecewise function bounds w.r.t length x
+% Define dz/dx for each part of the piecewise function bounds w.r.t length x
 
 
 for i = 1:length(x)
@@ -612,7 +613,7 @@ for i = 1:length(x)
 end
 
 
-%% Define zero lift angle of attack with equation 4.61 and numerically integrate
+% Define zero lift angle of attack with equation 4.61 and numerically integrate
 
 integrand = dz_dx.*(cos(theta_0) - 1);
 

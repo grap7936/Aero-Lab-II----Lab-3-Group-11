@@ -1,18 +1,19 @@
 %% ASEN 3802 -- Lab 3 -- Aerodynamics Lab
 
-%% Summary: 
+%% Summary:
+% -- PART 1--
 % Task 1:  models a 4 digit NACA airfoil both numerically and with an equi-angular representation. 
 % Task 2: Uses vortex panel code provided to find the coefficient of lift for different NACA airfoil
 % cases. Also, we will analyze where the coefficient of lift converges based on the number of panels
 % used, N.
 % Task 3: Using thin airfoil theory equations, the effects of airfoil thickness on overall lift will
 % be evaluated.
+% -- PART 2 --
+% Task 1: Created Pradtl's lifting line theory function and recreated Anderson 5.20 plot to validate
 
 %% Author(s): Graeme Appel, McKenna Coakley, Jake Wzientek, Cullen Watz
 
-%% Last Revised: 4/7/2026
-
-
+%% Last Revised: 4/14/2026
 
 
 %% Housekeeping
@@ -254,7 +255,7 @@ Results_Table = table( ...
     'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory'});
 disp(Results_Table)
 
-% ---------------- PART 2 -------------------------
+%% ---------------- PART 2 -------------------------
 
 % example inputs to test PLLT function
 a0_t = 2*pi;
@@ -268,12 +269,12 @@ b = 1;
 % define specified AR and taper ratio values to replicate Anderson figure 5.20
 AR_vec = [4 6 8 10];
 taper_ratio = linspace(0.01,1,100);
-% Preallocate delta 
+% Preallocate delta for plot
 delta = zeros(length(AR_vec), length(taper_ratio));
 
 for k = 1:length(AR_vec)
     AR = AR_vec(k);
-for i = 1:length(taper_ratio)
+for i = 1:length(taper_ratio) % compute geometric inputs based on AR and taper ratio
     c_r = (2*b)./ (AR * (1+taper_ratio(i)));
     c_t = taper_ratio(i) * c_r;
     [e(k,i),c_L,c_Di] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N);
@@ -281,7 +282,7 @@ for i = 1:length(taper_ratio)
 end
 end
 figure; hold on; grid on;
-
+% Anderson 5.20 plot
 plot(taper_ratio, delta(1,:), 'LineWidth', 2);
 plot(taper_ratio, delta(2,:), 'LineWidth', 2);
 plot(taper_ratio, delta(3,:), 'LineWidth', 2);
@@ -331,7 +332,7 @@ end
 y_t = ((t * c)/0.2) * ((0.2969 .* sqrt(x./c)) -  (0.1260*(x./c)) - (0.3516 .* (x./c).^2) + (0.2843 .* (x./c).^3) - (0.1036 .* (x./c).^4)); % numerical equation given
 %disp(length(y_t));
 
-%% Define Camber Line Distribution 
+% Define Camber Line Distribution 
 
 % preallocate variables:
 y_c = zeros(size(x));
@@ -374,7 +375,7 @@ for i = 1:length(x)
     end
 
 
-    %% Define X and Y locations over the upper and lower surfaces
+    % Define X and Y locations over the upper and lower surfaces
 
         x_u(i) = x(i) - y_t(i)*sin(zeta(i)); % x-coordinates over the upper surface
         x_L(i) = x(i) + y_t(i)*sin(zeta(i)); % x-coordinates over the lower surface
@@ -392,7 +393,7 @@ for i = 1:length(x)
     % x_L_CW = -x_L_CW;
 
 
-    %% Group into final output variables
+    % Group into final output variables
 
     % Note: output most be clockwise starting and ending at the trailing edge
     % gets rid of duplicate values at leading edge

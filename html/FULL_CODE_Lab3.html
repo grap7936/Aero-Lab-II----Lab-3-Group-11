@@ -1,0 +1,1584 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>ASEN 3802 -- Lab 3 -- Aerodynamics Lab</title>
+<meta name="generator" content="MATLAB 25.1">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-04-14">
+<meta name="DC.source" content="FULL_CODE_Lab3.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h1>ASEN 3802 -- Lab 3 -- Aerodynamics Lab</h1>
+<!--introduction-->
+<!--/introduction-->
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">Summary:</a>
+</li>
+<li>
+<a href="#2">Author(s): Graeme Appel, McKenna Coakley, Jake Wzientek, Cullen Watz</a>
+</li>
+<li>
+<a href="#3">Last Revised: 4/14/2026</a>
+</li>
+<li>
+<a href="#4">Housekeeping</a>
+</li>
+<li>
+<a href="#5">Task 1 -- Plot of NACA 0021 and NACA 2421 using 50 panels</a>
+</li>
+<li>
+<a href="#6">Task 2 --</a>
+</li>
+<li>
+<a href="#7">Task 3</a>
+</li>
+<li>
+<a href="#8">User Defined Functions</a>
+</li>
+<li>
+<a href="#9">1.) NACA Airfoil point distributions and plotting</a>
+</li>
+<li>
+<a href="#11">Define Thickness Distribution of Airfoil</a>
+</li>
+<li>
+<a href="#12">Define Camber Line Distribution</a>
+</li>
+<li>
+<a href="#14">Define X and Y locations over the upper and lower surfaces</a>
+</li>
+<li>
+<a href="#16">Group into final output variables</a>
+</li>
+<li>
+<a href="#18">2.) Vortex Panel Method Code</a>
+</li>
+<li>
+<a href="#19">3.) Thin Airfoil Theory Code</a>
+</li>
+<li>
+<a href="#21">Define Thickness Distribution of Airfoil</a>
+</li>
+<li>
+<a href="#22">Define theta_0 in terms of x using chord line equation:</a>
+</li>
+<li>
+<a href="#23">Define dz/dx for each part of the piecewise function bounds w.r.t length x</a>
+</li>
+<li>
+<a href="#24">Define zero lift angle of attack with equation 4.61 and numerically integrate</a>
+</li>
+<li>
+<a href="#26">4.) Prandtl Lifting Line Theory Code</a>
+</li>
+</ul>
+</div>
+<h2 id="1">Summary:</h2>
+<p>-- PART 1-- Task 1: models a 4 digit NACA airfoil both numerically and with an equi-angular representation. Task 2: Uses vortex panel code provided to find the coefficient of lift for different NACA airfoil cases. Also, we will analyze where the coefficient of lift converges based on the number of panels used, N. Task 3: Using thin airfoil theory equations, the effects of airfoil thickness on overall lift will be evaluated. -- PART 2 -- Task 1: Created Pradtl's lifting line theory function and recreated Anderson 5.20 plot to validate</p>
+<h2 id="2">Author(s): Graeme Appel, McKenna Coakley, Jake Wzientek, Cullen Watz</h2>
+<h2 id="3">Last Revised: 4/14/2026</h2>
+<h2 id="4">Housekeeping</h2>
+<pre class="codeinput">clc
+clear
+close <span class="string">all</span>
+</pre>
+<h2 id="5">Task 1 -- Plot of NACA 0021 and NACA 2421 using 50 panels</h2>
+<pre class="codeinput">
+<span class="comment">% Define Necessary parameters</span>
+
+<span class="comment">% NACA 0021</span>
+m = 0/100;
+p = 0/10;
+t = 21/100;
+
+<span class="comment">% NACA 2421</span>
+m2 = 4/100;
+p2 = 4/10;
+t2 = 15/100;
+
+c = 1;
+N = 50;
+
+<span class="comment">% Call Airfoil Distribution function for each case</span>
+[x_b, y_b, x_c, y_c] =  NACA_Airfoils(m,p,t,c,N);
+[x_b2, y_b2, x_c2, y_c2] =  NACA_Airfoils(m2,p2,t2,c,N);
+
+<span class="comment">% Plot both airfoil distributions</span>
+figure();
+subplot(2, 1, 1);
+plot(x_b, y_b, <span class="string">"-xb"</span>, <span class="string">"LineWidth"</span>,1.5)
+hold <span class="string">on</span>
+plot(x_c, y_c, <span class="string">"--g"</span>, <span class="string">"LineWidth"</span>,1.5)
+axis <span class="string">equal</span> <span class="comment">% implement correcting dimensions so that MATLAB does not stretch the y-axis</span>
+xlim([0 c]) <span class="comment">% set correct graph dimensions</span>
+ylim([-0.2*c 0.2*c])
+grid <span class="string">on</span>
+xlabel(<span class="string">'X - Coordinates'</span>);
+ylabel(<span class="string">'Y - Coordinates'</span>);
+title(<span class="string">"NACA 0012 Airfoil"</span>)
+legend(<span class="string">'Airfoil'</span>, <span class="string">'Camberline'</span>)
+
+subplot(2, 1, 2);
+plot(x_b2, y_b2, <span class="string">"-xr"</span>, <span class="string">"LineWidth"</span>,1.5)
+hold <span class="string">on</span>;
+plot(x_c2, y_c2, <span class="string">"--g"</span>, <span class="string">"LineWidth"</span>,1.5)
+axis <span class="string">equal</span> <span class="comment">% implement correcting dimensions so that MATLAB does not stretch the y-axis</span>
+xlim([0 c]) <span class="comment">% set correct graph dimensions</span>
+ylim([-0.2*c 0.2*c])
+grid <span class="string">on</span>
+xlabel(<span class="string">'X - Coordinates'</span>);
+ylabel(<span class="string">'Y - Coordinates'</span>);
+title(<span class="string">"NACA 2421 Airfoil"</span>);
+legend(<span class="string">'Airfoil'</span>, <span class="string">'Camberline'</span>)
+
+print(<span class="string">'task1'</span>, <span class="string">'-dpng'</span>, <span class="string">'-r500'</span>);
+
+clc
+clear
+</pre>
+<img vspace="5" hspace="5" src="FULL_CODE_Lab3_01.png" alt=""> <h2 id="6">Task 2 --</h2>
+<p>Define test variables:</p>
+<pre class="codeinput">i = 1;
+m = 0/100;
+p = 0/10;
+t = 21/100;
+c = 1;
+CL_old = 0;
+error = 1.5;
+N_exact = 500;
+
+alpha = 12; <span class="comment">% [deg]</span>
+v_inf = 50; <span class="comment">% [m/s]</span>
+Numerical_Plot = 1; <span class="comment">% variable to turn on numerical plots for vortex panel method</span>
+
+<span class="comment">% Call numerical function to get point distribution</span>
+[x_b, y_b] =  NACA_Airfoils(m,p,t,c,N_exact);
+
+
+<span class="comment">% Call vortex panel method code to get output plot</span>
+[CL_accurate] = Vortex_Panel(x_b, y_b, v_inf, alpha);
+
+N = 2;
+
+<span class="comment">% Loop through different vortex panel cases with incrementing N to determine most ideal amount of</span>
+<span class="comment">% panels to keep error under 1%.</span>
+<span class="keyword">while</span> error &gt; 1
+
+alpha = 12; <span class="comment">% [deg]</span>
+v_inf = 50; <span class="comment">% [m/s]</span>
+Numerical_Plot = 1; <span class="comment">% variable to turn on numerical plots for vortex panel method</span>
+
+<span class="comment">% Call numerical function to get point distribution</span>
+[x_b, y_b] =  NACA_Airfoils(m,p,t,c,N);
+
+
+<span class="comment">% Call vortex panel method code to get output plot</span>
+[CL(i)] = Vortex_Panel(x_b, y_b, v_inf, alpha);
+
+<span class="comment">% error = abs((CL(i)- CL_accurate)/(CL_accurate)) * 100;</span>
+error = abs((CL_accurate- CL(i))/(CL(i))) * 100;
+
+<span class="comment">% Assign new CL_value for the same error case</span>
+<span class="keyword">if</span> error &gt; 1
+    N = N+1;
+    CL_old = CL(i);
+    i = i + 1;
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+
+N_vec = 1:length(CL);
+disp([<span class="string">'Number of total panels: '</span>, num2str(2*(length(N_vec)))])
+
+<span class="comment">% Plot the Number of panels versus the changing/converging CL value</span>
+figure();
+plot(N_vec, CL,<span class="string">"LineWidth"</span>,1.5);
+xlabel(<span class="string">'Number of Panels on Upper and Lower Surface'</span>);
+ylabel(<span class="string">'Sectional Coefficient of Lift'</span>);
+title(<span class="string">'Convergence of CL With Respect To Number of Panels'</span>)
+grid <span class="string">on</span>
+
+<span class="comment">% Output results to a table</span>
+Results_Table = table( <span class="keyword">...</span>
+    N_exact, CL_accurate, <span class="keyword">...</span>
+    N_vec(end), CL(end), error(end), <span class="keyword">...</span>
+    <span class="string">'VariableNames'</span>, {<span class="string">'N_exact'</span>, <span class="string">'CL_exact'</span>, <span class="string">'N_predicted'</span>, <span class="string">'CL_predicted'</span>, <span class="string">'Percent_Error'</span>});
+disp(Results_Table)
+</pre>
+<img vspace="5" hspace="5" src="FULL_CODE_Lab3_02.png" alt=""> <h2 id="7">Task 3</h2>
+<pre class="codeinput">
+<span class="comment">% Call thin airfoil theory function for each different airfoil case --&gt; Note: for each case, alpha</span>
+<span class="comment">% varies from -8 degrees to 8 degrees</span>
+
+<span class="comment">% NACA 0006 case</span>
+m = 0/100;
+p = 0/10;
+t = 6/100;
+c = 1;
+N_req = N_vec(end); <span class="comment">% vortex panels required is the last value of the converging/increasing N vector</span>
+
+<span class="comment">% Call thin airfoil theory function to determine conditions under thin airfoil theory assumptions</span>
+[alpha_L0_thin_0006, alpha_L0_vort_0006, cl_thin_0006, CL_vort_0006, slope_thin_0006, slope_vort_0006] = Thin_Airfoil_Theory(m, p, t, c, N_req, alpha, v_inf);
+
+<span class="comment">% NACA 0012 case</span>
+m = 0/100;
+p = 0/10;
+t = 12/100;
+c = 1;
+N_req = N_vec(end); <span class="comment">% vortex panels required is the last value of the converging/increasing N vector</span>
+
+<span class="comment">% Call thin airfoil theory function to determine conditions under thin airfoil theory assumptions</span>
+[alpha_L0_thin_0012, alpha_L0_vort_0012, cl_thin_0012, CL_vort_0012, slope_thin_0012, slope_vort_0012] = Thin_Airfoil_Theory(m, p, t, c, N_req, alpha, v_inf);
+
+
+<span class="comment">% NACA 0018 case</span>
+m = 0/100;
+p = 0/10;
+t = 18/100;
+c = 1;
+N_req = N_vec(end); <span class="comment">% vortex panels required is the last value of the converging/increasing N vector</span>
+
+<span class="comment">% Call thin airfoil theory function to determine conditions under thin airfoil theory assumptions</span>
+[alpha_L0_thin_0018, alpha_L0_vort_0018, cl_thin_0018, CL_vort_0018, slope_thin_0018, slope_vort_0018] = Thin_Airfoil_Theory(m, p, t, c, N_req, alpha, v_inf);
+
+
+<span class="comment">% Read in experimental data</span>
+<span class="comment">% experimental data from digitizer</span>
+data1 = load(<span class="string">"NACA0006.mat"</span>);
+data1 = data1.data;
+AoA_exp0006 = data1(:,1);
+CL_exp0006 = data1(1,:);
+
+<span class="comment">% Find the measured angle of attack value (i.e AoA_exp0006) that occurs when the CL values are</span>
+<span class="comment">% closest to 0 (for zero lift angle of attack)</span>
+[~, alpha_index_0006] = min(abs(CL_exp0006)); <span class="comment">% finds index where CL is closest to 0</span>
+AoA_L0_exp0006 = AoA_exp0006(alpha_index_0006); <span class="comment">% Use this value for table comparison</span>
+
+
+data2 = load(<span class="string">"NACA0012.mat"</span>);
+data2 = data2.data;
+AoA_exp0012 = data2(:,1);
+CL_exp0012 = data2(1,:);
+
+<span class="comment">% Find the measured angle of attack value (i.e AoA_exp0006) that occurs when the CL values crosses 0</span>
+[~, alpha_index_0012] = min(abs(CL_exp0012)); <span class="comment">% finds index where CL is closest to 0</span>
+AoA_L0_exp0012 = AoA_exp0012(alpha_index_0012); <span class="comment">% Use this value for table comparison</span>
+
+data3 = load(<span class="string">"NACA2412.mat"</span>);
+data3 = data3.data;
+AoA_exp2412 = data3(:,1);
+CL_exp2412 = data3(1,:);
+
+data4 = load(<span class="string">"NACA4412.mat"</span>);
+data4 = data4.data;
+AoA_exp4412 = data4(:,1);
+CL_exp4412 = data4(1,:);
+
+
+<span class="comment">% Create output tables</span>
+<span class="comment">% Output table comparing zero lift angle of attack for each case</span>
+
+<span class="comment">% NACA 0006 Airfoil</span>
+Results_Table = table( <span class="keyword">...</span>
+    alpha_L0_vort_0006, alpha_L0_thin_0006, AoA_L0_exp0006, <span class="keyword">...</span>
+    <span class="string">'VariableNames'</span>, {<span class="string">'Vortex_Panel_Method'</span>, <span class="string">'Thin_Airfoil_Theory'</span>, <span class="string">'Experimental_Data'</span>});
+disp(Results_Table)
+
+<span class="comment">% NACA 0012 Airfoil</span>
+Results_Table = table( <span class="keyword">...</span>
+    alpha_L0_vort_0012, alpha_L0_thin_0012, AoA_L0_exp0012, <span class="keyword">...</span>
+    <span class="string">'VariableNames'</span>, {<span class="string">'Vortex_Panel_Method'</span>, <span class="string">'Thin_Airfoil_Theory'</span>, <span class="string">'Experimental_Data'</span>});
+disp(Results_Table)
+
+<span class="comment">% NACA 0018 Airfoil -- Note experimental data does not exist for this configuration</span>
+Results_Table = table( <span class="keyword">...</span>
+    alpha_L0_vort_0018, alpha_L0_thin_0018, <span class="keyword">...</span>
+    <span class="string">'VariableNames'</span>, {<span class="string">'Vortex_Panel_Method'</span>, <span class="string">'Thin_Airfoil_Theory'</span>});
+disp(Results_Table)
+
+
+<span class="comment">% Output table comparing lift curve slope for each case</span>
+
+<span class="comment">% NACA 0006 Airfoil</span>
+Results_Table = table( <span class="keyword">...</span>
+    slope_vort_0006, slope_thin_0006, AoA_exp0006(1), <span class="keyword">...</span>
+    <span class="string">'VariableNames'</span>, {<span class="string">'Vortex_Panel_Method'</span>, <span class="string">'Thin_Airfoil_Theory'</span>, <span class="string">'Experimental_Data'</span>});
+disp(Results_Table)
+
+<span class="comment">% NACA 0012 Airfoil</span>
+Results_Table = table( <span class="keyword">...</span>
+    slope_vort_0012, slope_thin_0012, AoA_exp0012(1), <span class="keyword">...</span>
+    <span class="string">'VariableNames'</span>, {<span class="string">'Vortex_Panel_Method'</span>, <span class="string">'Thin_Airfoil_Theory'</span>, <span class="string">'Experimental_Data'</span>});
+disp(Results_Table)
+
+<span class="comment">% NACA 0018 Airfoil -- Note experimental data does not exist for this configuration</span>
+Results_Table = table( <span class="keyword">...</span>
+    slope_vort_0018, slope_thin_0018, <span class="keyword">...</span>
+    <span class="string">'VariableNames'</span>, {<span class="string">'Vortex_Panel_Method'</span>, <span class="string">'Thin_Airfoil_Theory'</span>});
+disp(Results_Table)
+
+<span class="comment">% ---------------- PART 2 -------------------------</span>
+
+<span class="comment">% example inputs to test PLLT function</span>
+a0_t = 2*pi;
+a0_r = 2*pi;
+aero_t = 8;
+aero_r = 8;
+geo_t = 15;
+geo_r = 15;
+N = 100;
+b = 1;
+<span class="comment">% define specified AR and taper ratio values to replicate Anderson figure 5.20</span>
+AR_vec = [4 6 8 10];
+taper_ratio = linspace(0.01,1,100);
+<span class="comment">% Preallocate delta for plot</span>
+delta = zeros(length(AR_vec), length(taper_ratio));
+
+<span class="keyword">for</span> k = 1:length(AR_vec)
+    AR = AR_vec(k);
+<span class="keyword">for</span> i = 1:length(taper_ratio) <span class="comment">% compute geometric inputs based on AR and taper ratio</span>
+    c_r = (2*b)./ (AR * (1+taper_ratio(i)));
+    c_t = taper_ratio(i) * c_r;
+    [e(k,i),c_L,c_Di] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N);
+    delta(k,i) = (1/e(k,i)) - 1;
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+figure; hold <span class="string">on</span>; grid <span class="string">on</span>;
+<span class="comment">% Anderson 5.20 plot</span>
+plot(taper_ratio, delta(1,:), <span class="string">'LineWidth'</span>, 2);
+plot(taper_ratio, delta(2,:), <span class="string">'LineWidth'</span>, 2);
+plot(taper_ratio, delta(3,:), <span class="string">'LineWidth'</span>, 2);
+plot(taper_ratio, delta(4,:), <span class="string">'LineWidth'</span>, 2);
+xlabel(<span class="string">'Taper Ratio (c_t/c_r)'</span>)
+ylabel(<span class="string">'\delta'</span>)
+title(<span class="string">'Effect of Aspect Ratio and Taper Ratio on \delta'</span>)
+legend(<span class="string">'AR = 4'</span>,<span class="string">'AR = 6'</span>,<span class="string">'AR = 8'</span>,<span class="string">'AR = 10'</span>,<span class="string">'Location'</span>,<span class="string">'best'</span>)
+</pre>
+<h2 id="8">User Defined Functions</h2>
+<h2 id="9">1.) NACA Airfoil point distributions and plotting</h2>
+<pre class="codeinput">
+<span class="keyword">function</span> [x_b,y_b,x_camber,y_camber] =  NACA_Airfoils(m,p,t,c,N)
+</pre>
+<pre class="codeinput">
+<span class="comment">% Goal/Purpose: Modeling a 4 digit NACA airfoil representation numerically by converting 4 digit</span>
+<span class="comment">% inputs into relevant variables and finding discrete x and y coordinates for the top and bottom of</span>
+<span class="comment">% the airfoil using numerically derived equations</span>
+
+<span class="comment">% Inputs:</span>
+<span class="comment">% 1.) m = max airfoil camber. This is the 1st digit (leftmost) of the 4 digit NACA airfoil</span>
+<span class="comment">% representation and represents the max camber of the chord in percentage of the chord.</span>
+<span class="comment">% 2.) p = location of max camber. This is the 2nd digit from the left of the 4 digit NACA airfoil</span>
+<span class="comment">% representation and represents the location of the max camber (measured from the leading edge) in</span>
+<span class="comment">% 1/10 of the chord.</span>
+<span class="comment">% 3.) t = max airfoil thickness. This is the last 2 digits of the 4 digit NACA airfoil</span>
+<span class="comment">% representation and represents the maximum thickness of the airfoil in percent of the chord.</span>
+<span class="comment">% 4.) c = total chord length of the airfoil</span>
+<span class="comment">% 5.) N = # of employed panels for vortex panel method over each surface</span>
+
+<span class="comment">% Outputs:</span>
+<span class="comment">% 1.) x_b = vector containing the x-location of all airfoil boundary points</span>
+<span class="comment">% 2.) y_b = vector containing the y-location of all airfoil boundary points</span>
+</pre>
+<h2 id="11">Define Thickness Distribution of Airfoil</h2>
+<pre class="codeinput">
+<span class="keyword">for</span> i = 1:N+1
+    theta_i = (i-1)*pi/N;             <span class="comment">% goes from 0 to pi</span>
+    x(i) = c/2 + c/2 * cos(theta_i); <span class="comment">% x: c &rarr; 0</span>
+<span class="keyword">end</span>
+<span class="comment">%disp(length(x));</span>
+y_t = ((t * c)/0.2) * ((0.2969 .* sqrt(x./c)) -  (0.1260*(x./c)) - (0.3516 .* (x./c).^2) + (0.2843 .* (x./c).^3) - (0.1036 .* (x./c).^4)); <span class="comment">% numerical equation given</span>
+<span class="comment">%disp(length(y_t));</span>
+</pre>
+<h2 id="12">Define Camber Line Distribution</h2>
+<pre class="codeinput">
+<span class="comment">% preallocate variables:</span>
+y_c = zeros(size(x));
+dy_c = zeros(size(x));
+zeta = zeros(size(x));
+
+x_u = zeros(size(x));
+x_L = zeros(size(x));
+
+y_u = zeros(size(x));
+y_L = zeros(size(x));
+
+<span class="comment">% Define piecewise function using if statements</span>
+
+<span class="keyword">for</span> i = 1:length(x)
+</pre>
+<pre class="codeinput">    <span class="keyword">if</span> m == 0 || p == 0
+
+        y_c(i) = 0; dy_c(i) = 0; zeta(i) = 0;
+
+    <span class="keyword">elseif</span> x(i) &lt; p*c
+
+        y_c(i) = m * (x(i)/(p^2)) * ((2*p) - (x(i)/c)); <span class="comment">% camber line distribution</span>
+
+        dy_c(i) = ((2*m)/p) - ((2*m)/(c*p^2))*x(i); <span class="comment">% derivative of camber line distribution</span>
+
+        zeta(i) = atan(dy_c(i)); <span class="comment">% compute zeta</span>
+
+    <span class="keyword">elseif</span> x(i) &gt;= p*c &amp;&amp; x(i) &lt;= c
+
+        y_c(i) = m * ((c-x(i))/(1-p)^2) * (1 + (x(i)/c) - (2*p)); <span class="comment">% camber line distribution</span>
+
+        dy_c(i) = (2*p*m)/(1-p)^2 -((2*m)/(c*(1-p)^2))*x(i); <span class="comment">% derivative of camber line distribution</span>
+
+        zeta(i) = atan(dy_c(i)); <span class="comment">% compute zeta</span>
+
+    <span class="keyword">else</span>
+
+        disp(<span class="string">'Wrong x-value'</span>);
+
+    <span class="keyword">end</span>
+</pre>
+<h2 id="14">Define X and Y locations over the upper and lower surfaces</h2>
+<pre class="codeinput">        x_u(i) = x(i) - y_t(i)*sin(zeta(i)); <span class="comment">% x-coordinates over the upper surface</span>
+        x_L(i) = x(i) + y_t(i)*sin(zeta(i)); <span class="comment">% x-coordinates over the lower surface</span>
+
+        y_u(i) = y_c(i) + y_t(i)*cos(zeta(i)); <span class="comment">% y-coordinates over the upper surface</span>
+        y_L(i) = y_c(i) - y_t(i)*cos(zeta(i)); <span class="comment">% y-coordinates over the lower surface</span>
+</pre>
+<pre class="codeinput">    <span class="keyword">end</span>
+
+
+    <span class="comment">% Note: we must reverse the order of all lower distributions to plot clockwise</span>
+    <span class="comment">% x_u_CW = flip(x_u);</span>
+    <span class="comment">% y_u_CW = flip(y_u);</span>
+    <span class="comment">% y_L_CW = -1*y_L_CW;</span>
+    <span class="comment">% x_L_CW = -x_L_CW;</span>
+</pre>
+<h2 id="16">Group into final output variables</h2>
+<pre class="codeinput">    <span class="comment">% Note: output most be clockwise starting and ending at the trailing edge</span>
+    <span class="comment">% gets rid of duplicate values at leading edge</span>
+    x_b = [x_L, flip(x_u(1:end-1))];
+    y_b = [y_L, flip(y_u(1:end-1))];
+    x_camber = fliplr(x);
+    y_camber = fliplr(y_c);
+</pre>
+<pre class="codeinput">
+<span class="keyword">end</span>
+</pre>
+<h2 id="18">2.) Vortex Panel Method Code</h2>
+<pre class="codeinput">
+<span class="keyword">function</span> [CL] = Vortex_Panel(XB,YB,VINF,ALPHA)
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% Input:                           %</span>
+<span class="comment">%                                  %</span>
+<span class="comment">% XB  = Boundary Points x-location %</span>
+<span class="comment">% YB  = Boundary Points y-location %</span>
+<span class="comment">% VINF  = Free-stream Flow Speed   %</span>
+<span class="comment">% ALPHA = AOA                      %</span>
+<span class="comment">%                                  %</span>
+<span class="comment">% Output:                          %</span>
+<span class="comment">%                                  %</span>
+<span class="comment">% CL = Sectional Lift Coefficient  %</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% Convert to Radians %</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%</span>
+
+ALPHA = ALPHA*pi/180;
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% Compute the Chord %</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%</span>
+
+CHORD = max(XB)-min(XB);
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% Determine the Number of Panels %</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+M = max(size(XB,1),size(XB,2))-1;
+MP1 = M+1;
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% Intra-Panel Relationships:                                  %</span>
+<span class="comment">%                                                             %</span>
+<span class="comment">% Determine the Control Points, Panel Sizes, and Panel Angles %</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+<span class="keyword">for</span> I = 1:M
+    IP1 = I+1;
+    X(I) = 0.5*(XB(I)+XB(IP1));
+    Y(I) = 0.5*(YB(I)+YB(IP1));
+    S(I) = sqrt( (XB(IP1)-XB(I))^2 +( YB(IP1)-YB(I))^2 );
+    THETA(I) = atan2( YB(IP1)-YB(I), XB(IP1)-XB(I) );
+    SINE(I) = sin( THETA(I) );
+    COSINE(I) = cos( THETA(I) );
+    RHS(I) = sin( THETA(I)-ALPHA );
+<span class="keyword">end</span>
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% Inter-Panel Relationships:             %</span>
+<span class="comment">%                                        %</span>
+<span class="comment">% Determine the Integrals between Panels %</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+<span class="keyword">for</span> I = 1:M
+    <span class="keyword">for</span> J = 1:M
+        <span class="keyword">if</span> I == J
+            CN1(I,J) = -1.0;
+            CN2(I,J) = 1.0;
+            CT1(I,J) = 0.5*pi;
+            CT2(I,J) = 0.5*pi;
+        <span class="keyword">else</span>
+            A = -(X(I)-XB(J))*COSINE(J) - (Y(I)-YB(J))*SINE(J);
+            B = (X(I)-XB(J))^2 + (Y(I)-YB(J))^2;
+            C = sin( THETA(I)-THETA(J) );
+            D = cos( THETA(I)-THETA(J) );
+            E = (X(I)-XB(J))*SINE(J) - (Y(I)-YB(J))*COSINE(J);
+            F = log( 1.0 + S(J)*(S(J)+2*A)/B );
+            G = atan2( E*S(J), B+A*S(J) );
+            P = (X(I)-XB(J)) * sin( THETA(I) - 2*THETA(J) ) <span class="keyword">...</span>
+              + (Y(I)-YB(J)) * cos( THETA(I) - 2*THETA(J) );
+            Q = (X(I)-XB(J)) * cos( THETA(I) - 2*THETA(J) ) <span class="keyword">...</span>
+              - (Y(I)-YB(J)) * sin( THETA(I) - 2*THETA(J) );
+            CN2(I,J) = D + 0.5*Q*F/S(J) - (A*C+D*E)*G/S(J);
+            CN1(I,J) = 0.5*D*F + C*G - CN2(I,J);
+            CT2(I,J) = C + 0.5*P*F/S(J) + (A*D-C*E)*G/S(J);
+            CT1(I,J) = 0.5*C*F - D*G - CT2(I,J);
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% Inter-Panel Relationships:           %</span>
+<span class="comment">%                                      %</span>
+<span class="comment">% Determine the Influence Coefficients %</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+<span class="keyword">for</span> I = 1:M
+    AN(I,1) = CN1(I,1);
+    AN(I,MP1) = CN2(I,M);
+    AT(I,1) = CT1(I,1);
+    AT(I,MP1) = CT2(I,M);
+    <span class="keyword">for</span> J = 2:M
+        AN(I,J) = CN1(I,J) + CN2(I,J-1);
+        AT(I,J) = CT1(I,J) + CT2(I,J-1);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+AN(MP1,1) = 1.0;
+AN(MP1,MP1) = 1.0;
+<span class="keyword">for</span> J = 2:M
+    AN(MP1,J) = 0.0;
+<span class="keyword">end</span>
+RHS(MP1) = 0.0;
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% Solve for the gammas %</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+GAMA = AN\RHS';
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% Solve for Tangential Veloity and Coefficient of Pressure %</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+<span class="keyword">for</span> I = 1:M
+    V(I) = cos( THETA(I)-ALPHA );
+    <span class="keyword">for</span> J = 1:MP1
+        V(I) = V(I) + AT(I,J)*GAMA(J);
+    <span class="keyword">end</span>
+    CP(I) = 1.0 - V(I)^2;
+<span class="keyword">end</span>
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% Solve for Sectional Coefficient of Lift %</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+CIRCULATION = sum(S.*V);
+CL = 2*CIRCULATION/CHORD;
+
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">Number of total panels: 72
+    N_exact    CL_exact    N_predicted    CL_predicted    Percent_Error
+    _______    ________    ___________    ____________    _____________
+
+      500       1.538          36            1.5232          0.97338   
+
+</pre>
+<h2 id="19">3.) Thin Airfoil Theory Code</h2>
+<pre class="codeinput">
+<span class="keyword">function</span> [alpha_L0_thin, alpha_L0_vort, cl_thin, CL_vort, slope_thin, slope_vort] = Thin_Airfoil_Theory(m, p, t, c, N_ideal, alpha,v_inf)
+</pre>
+<pre class="codeinput">
+<span class="comment">% Goal/Purpose: Find zero lift angle of attack using thin airfoil theory and computing equation 4.61</span>
+<span class="comment">% in anderson. Note that we already have dz/dx from previous derivation input piecewise into our</span>
+<span class="comment">% NACA_Airfoils function. Then, simply solve for theta from the equation: x = (c/2)(1-cos(theta))</span>
+<span class="comment">% and plug this in for theta and numerically integrate.</span>
+
+<span class="comment">% Inputs:</span>
+<span class="comment">% 2.) m = max airfoil camber. This is the 1st digit (leftmost) of the 4 digit NACA airfoil</span>
+<span class="comment">% representation and represents the max camber of the chord in percentage of the chord.</span>
+<span class="comment">% 3.) p = location of max camber. This is the 2nd digit from the left of the 4 digit NACA airfoil</span>
+<span class="comment">% representation and represents the location of the max camber (measured from the leading edge) in</span>
+<span class="comment">% 3.) t = max airfoil thickness. This is the last 2 digits of the 4 digit NACA airfoil</span>
+<span class="comment">% representation and represents the maximum thickness of the airfoil in percent of the chord.</span>
+<span class="comment">% 4.) c = chord length of given airfoil configuration</span>
+<span class="comment">% 1/10 of the chord.</span>
+<span class="comment">% 4.) N_ideal = ideal number of vortex panels to get within 1% error</span>
+<span class="comment">% 5.) alpha = arbitrary input angle of attack value(s) in vector form</span>
+
+<span class="comment">% Outputs:</span>
+<span class="comment">% 1.) alpha_L0 = zero lift angle of attack using thin airfoil theory</span>
+
+alpha_vec = linspace(-8,8,N_ideal); <span class="comment">%create an angle of attack vector cooresponding to experimental trends</span>
+alpha_rad = (pi/180) .* alpha_vec;
+</pre>
+<h2 id="21">Define Thickness Distribution of Airfoil</h2>
+<pre class="codeinput">
+<span class="comment">% Equiangular distribution</span>
+<span class="keyword">for</span> i = 1:N_ideal+1
+
+    theta_i = (i-1)*pi/N_ideal;             <span class="comment">% goes from 0 to pi</span>
+
+    x(i) = c/2 + c/2 * cos(theta_i); <span class="comment">% x: c &rarr; 0</span>
+
+<span class="keyword">end</span>
+
+<span class="comment">% y_t = ((t * c)/0.2) * ((0.2969 .* sqrt(x./c)) -  (0.1260*(x./c)) - (0.3516 .* (x./c).^2) + (0.2843 .* (x./c).^3) - (0.1036 .* (x./c).^4)); % numerical equation</span>
+</pre>
+<h2 id="22">Define theta_0 in terms of x using chord line equation:</h2>
+<pre class="codeinput">theta_0 =  acos( (1 - x.*(2/c)) );
+</pre>
+<h2 id="23">Define dz/dx for each part of the piecewise function bounds w.r.t length x</h2>
+<pre class="codeinput">
+<span class="keyword">for</span> i = 1:length(x)
+    <span class="keyword">if</span> m == 0 || p == 0 <span class="comment">% for if there are any symmetric airfoil components</span>
+
+    dz_dx(i) = 0;
+
+    <span class="keyword">elseif</span> x(i) &gt;= 0 &amp;&amp; x(i) &lt; p*c  <span class="comment">% 1st part of piecewise function</span>
+
+    dz_dx(i) = ((2*m)/p) - ((2*m)/(c*p^2))*x(i); <span class="comment">% derivative of camber line distribution</span>
+
+
+    <span class="keyword">elseif</span> x(i) &gt;= p*c &amp;&amp; x(i) &lt;= c
+
+    dz_dx(i) = (2*p*m)/(1-p)^2 -((2*m)/(c*(1-p)^2))*x(i); <span class="comment">% derivative of camber line distribution</span>
+
+    <span class="keyword">else</span>
+
+    disp(<span class="string">'Wrong x-value'</span>);
+
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre>
+<h2 id="24">Define zero lift angle of attack with equation 4.61 and numerically integrate</h2>
+<pre class="codeinput">integrand = dz_dx.*(cos(theta_0) - 1);
+
+
+alpha_L0_thin = (-1/pi) * trapz(theta_0, integrand); <span class="comment">% computing zero lift angle of attack in [rad] w.r.t theta using numerical integration</span>
+
+<span class="comment">% loop through for a range of changing alpha values</span>
+
+[x_b, y_b] =  NACA_Airfoils(m,p,t,c,N_ideal);
+
+
+<span class="comment">% loop over all alpha vector values to get vector outputs of CL and cl for each alpha case</span>
+<span class="keyword">for</span> i = 1:length(alpha_vec)
+CL_vort(i) = Vortex_Panel(x_b, y_b, v_inf, alpha_vec(i));
+cl_thin(i) = (2*pi)*(alpha_rad(i) - alpha_L0_thin); <span class="comment">% compute sectional lift coefficient with given alpha value (note: alpha_L0 should be constant, only alpha input indexes)</span>
+<span class="keyword">end</span>
+
+<span class="comment">% calculate lift slope for both vortex and thin airfoil methods:</span>
+
+p_thin = polyfit(alpha_rad, cl_thin, 1); <span class="comment">% ensure both alpha inputs and cl_thin inputs have units of radians</span>
+slope_thin = p_thin(1);
+
+p_vort = polyfit(alpha_rad, CL_vort,1);  <span class="comment">% ensure both alpha inputs and cl_thin inputs have units of radians</span>
+slope_vort = p_vort(1);
+intercept_vort = p_vort(2);
+alpha_L0_vort = -intercept_vort / slope_vort; <span class="comment">% not sure if this is right. should AoA L0 be a vector or one value?</span>
+</pre>
+<pre class="codeinput">
+<span class="keyword">end</span>
+</pre>
+<h2 id="26">4.) Prandtl Lifting Line Theory Code</h2>
+<p>Goal/Purpose: Analyze the performance of a finite wing by modeling a sheet of bound horseshoe vortex filaments. It solves the fundamental equation of Prandtl's Lifitng Line Theory for finite wings with thick airfoils to find the fourier coefficients, which can then be used to solve for various performace perameters such as e, CL, and CDi.</p>
+<pre class="codeinput">
+<span class="comment">% Inputs:</span>
+<span class="comment">% 1.) b = wing span (ft)</span>
+<span class="comment">% 2.) a0_t = cross-sectional lift slope at the tips (per radian)</span>
+<span class="comment">% 3.) a0_r = cross-sectional lift slope at the root (per radian)</span>
+<span class="comment">% 4.) c_t = chord at the tips (in feet)</span>
+<span class="comment">% 5.) c_r = chord at the root (in feet)</span>
+<span class="comment">% 6.) aero_t = zero-lift angle of attack at the tips (in degrees)</span>
+<span class="comment">% 7.) aero_r = zero-lift angle of attack at the root (in degrees)</span>
+<span class="comment">% 8.) geo_t = geometric angle of attack at the tips (in degrees)</span>
+<span class="comment">% 9.) geo_r = geometric angle of attack at the root (in degrees)</span>
+<span class="comment">% 10.) N = number of odd terms to include in the series expansion for circulation</span>
+
+<span class="comment">% Outputs:</span>
+<span class="comment">% 1.) e = span efficiency factor</span>
+<span class="comment">% 2.) C_L = coefficient of lift</span>
+<span class="comment">% 3.) C_Di = induced coefficient of drag</span>
+
+<span class="keyword">function</span> [e,c_L,c_Di,delta] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N)
+<span class="comment">% convert angles of attack to radians</span>
+aero_t = aero_t * (pi/180);
+aero_r = aero_r * (pi/180);
+geo_t = geo_t * (pi/180);
+geo_r = geo_r * (pi/180);
+
+<span class="comment">% satisfying the fundamental equation at N locations</span>
+thetas = (1:N) * pi/(2*N);
+<span class="comment">% using odd terms</span>
+n = 1:2:(2*N-1);
+<span class="comment">% non-dimensionalize distance along the wing</span>
+y = (b/2) .* cos(thetas);
+y_normalized = abs(y)/(b/2);
+<span class="comment">% create linear spans along wing of inputs based on non-dimensionalization</span>
+c = c_r + (c_t - c_r) .* y_normalized;
+a0 = a0_r + (a0_t - a0_r) .* y_normalized;
+AoA_L0 = aero_r + (aero_t - aero_r) .* y_normalized;
+AoA_geo = geo_r + (geo_t - geo_r) .* y_normalized;
+
+<span class="comment">% [b] = [A][x] where [x] contain fourier coefficients A1, A2 ....</span>
+b_vec = (AoA_geo - AoA_L0)';
+<span class="comment">% i corresponds to theta, j corresponds to N</span>
+<span class="comment">% generate A matrix using the fundamental equation of PLLT</span>
+<span class="keyword">for</span> i = 1:length(n)
+    <span class="keyword">for</span> j = 1:length(n)
+        A_mat(i,j) = ((4*b)/(a0(i)*c(i))* sin(n(j)*thetas(i)) + (n(j) * <span class="keyword">...</span>
+            (sin(n(j)*thetas(i))/sin(thetas(i)))));
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% x corresponds to Fourier coefficient column vector</span>
+x = A_mat\b_vec;
+<span class="comment">% solve for delta using solved Fourier Coefficients</span>
+delta = 0;
+<span class="keyword">for</span> i = 2:length(n)
+    delta = delta + (n(i) * (x(i)/x(1))^2);
+<span class="keyword">end</span>
+<span class="comment">% span efficiency factor</span>
+e = 1 / (1 + delta);
+<span class="comment">% planform area</span>
+S = (b/2)*(c_r + c_t);
+<span class="comment">% Aspect ratio</span>
+AR = b^2/S;
+<span class="comment">% Solve for coefficient of lift using first fourier term</span>
+c_L = x(1)*pi*AR;
+
+<span class="comment">% compute Cdi by summing fourier coefficients</span>
+sum = 0;
+<span class="keyword">for</span> i = 1:length(n)
+    sum = sum + (n(i) * x(i)^2) * (pi/2);
+    c_Di = ((2*b^2)/S) * sum;
+<span class="keyword">end</span>
+
+<span class="keyword">end</span>
+</pre>
+<img vspace="5" hspace="5" src="FULL_CODE_Lab3_03.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2025a</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% ASEN 3802 REPLACE_WITH_DASH_DASH Lab 3 REPLACE_WITH_DASH_DASH Aerodynamics Lab
+
+%% Summary:
+% REPLACE_WITH_DASH_DASH PART 1REPLACE_WITH_DASH_DASH
+% Task 1:  models a 4 digit NACA airfoil both numerically and with an equi-angular representation. 
+% Task 2: Uses vortex panel code provided to find the coefficient of lift for different NACA airfoil
+% cases. Also, we will analyze where the coefficient of lift converges based on the number of panels
+% used, N.
+% Task 3: Using thin airfoil theory equations, the effects of airfoil thickness on overall lift will
+% be evaluated.
+% REPLACE_WITH_DASH_DASH PART 2 REPLACE_WITH_DASH_DASH
+% Task 1: Created Pradtl's lifting line theory function and recreated Anderson 5.20 plot to validate
+
+%% Author(s): Graeme Appel, McKenna Coakley, Jake Wzientek, Cullen Watz
+
+%% Last Revised: 4/14/2026
+
+
+%% Housekeeping
+clc
+clear
+close all
+
+%% Task 1 REPLACE_WITH_DASH_DASH Plot of NACA 0021 and NACA 2421 using 50 panels
+
+% Define Necessary parameters
+
+% NACA 0021
+m = 0/100;
+p = 0/10;
+t = 21/100;
+
+% NACA 2421
+m2 = 4/100;
+p2 = 4/10;
+t2 = 15/100;
+
+c = 1;
+N = 50;
+
+% Call Airfoil Distribution function for each case
+[x_b, y_b, x_c, y_c] =  NACA_Airfoils(m,p,t,c,N);
+[x_b2, y_b2, x_c2, y_c2] =  NACA_Airfoils(m2,p2,t2,c,N);
+
+% Plot both airfoil distributions
+figure();
+subplot(2, 1, 1);
+plot(x_b, y_b, "-xb", "LineWidth",1.5)
+hold on 
+plot(x_c, y_c, "REPLACE_WITH_DASH_DASHg", "LineWidth",1.5)
+axis equal % implement correcting dimensions so that MATLAB does not stretch the y-axis
+xlim([0 c]) % set correct graph dimensions
+ylim([-0.2*c 0.2*c])
+grid on
+xlabel('X - Coordinates');
+ylabel('Y - Coordinates');
+title("NACA 0012 Airfoil")
+legend('Airfoil', 'Camberline')
+
+subplot(2, 1, 2);
+plot(x_b2, y_b2, "-xr", "LineWidth",1.5)
+hold on;
+plot(x_c2, y_c2, "REPLACE_WITH_DASH_DASHg", "LineWidth",1.5)
+axis equal % implement correcting dimensions so that MATLAB does not stretch the y-axis
+xlim([0 c]) % set correct graph dimensions
+ylim([-0.2*c 0.2*c])
+grid on
+xlabel('X - Coordinates');
+ylabel('Y - Coordinates');
+title("NACA 2421 Airfoil");
+legend('Airfoil', 'Camberline')
+
+print('task1', '-dpng', '-r500');
+
+clc
+clear
+
+%% Task 2 REPLACE_WITH_DASH_DASH 
+% Define test variables:
+i = 1;
+m = 0/100;
+p = 0/10;
+t = 21/100;
+c = 1;
+CL_old = 0;
+error = 1.5; 
+N_exact = 500;
+
+alpha = 12; % [deg]
+v_inf = 50; % [m/s]
+Numerical_Plot = 1; % variable to turn on numerical plots for vortex panel method
+
+% Call numerical function to get point distribution
+[x_b, y_b] =  NACA_Airfoils(m,p,t,c,N_exact);
+
+
+% Call vortex panel method code to get output plot
+[CL_accurate] = Vortex_Panel(x_b, y_b, v_inf, alpha);
+
+N = 2; 
+
+% Loop through different vortex panel cases with incrementing N to determine most ideal amount of
+% panels to keep error under 1%.
+while error > 1
+
+alpha = 12; % [deg]
+v_inf = 50; % [m/s]
+Numerical_Plot = 1; % variable to turn on numerical plots for vortex panel method
+
+% Call numerical function to get point distribution
+[x_b, y_b] =  NACA_Airfoils(m,p,t,c,N);
+
+
+% Call vortex panel method code to get output plot
+[CL(i)] = Vortex_Panel(x_b, y_b, v_inf, alpha);
+
+% error = abs((CL(i)- CL_accurate)/(CL_accurate)) * 100;
+error = abs((CL_accurate- CL(i))/(CL(i))) * 100;
+
+% Assign new CL_value for the same error case
+if error > 1
+    N = N+1;
+    CL_old = CL(i);
+    i = i + 1;
+end
+end
+
+N_vec = 1:length(CL);
+disp(['Number of total panels: ', num2str(2*(length(N_vec)))])
+
+% Plot the Number of panels versus the changing/converging CL value
+figure();
+plot(N_vec, CL,"LineWidth",1.5);
+xlabel('Number of Panels on Upper and Lower Surface');
+ylabel('Sectional Coefficient of Lift');
+title('Convergence of CL With Respect To Number of Panels')
+grid on 
+
+% Output results to a table
+Results_Table = table( ...
+    N_exact, CL_accurate, ...
+    N_vec(end), CL(end), error(end), ...
+    'VariableNames', {'N_exact', 'CL_exact', 'N_predicted', 'CL_predicted', 'Percent_Error'});
+disp(Results_Table)
+
+%% Task 3
+
+% Call thin airfoil theory function for each different airfoil case REPLACE_WITH_DASH_DASH> Note: for each case, alpha
+% varies from -8 degrees to 8 degrees
+
+% NACA 0006 case
+m = 0/100;
+p = 0/10;
+t = 6/100;
+c = 1;
+N_req = N_vec(end); % vortex panels required is the last value of the converging/increasing N vector
+
+% Call thin airfoil theory function to determine conditions under thin airfoil theory assumptions
+[alpha_L0_thin_0006, alpha_L0_vort_0006, cl_thin_0006, CL_vort_0006, slope_thin_0006, slope_vort_0006] = Thin_Airfoil_Theory(m, p, t, c, N_req, alpha, v_inf);
+
+% NACA 0012 case
+m = 0/100;
+p = 0/10;
+t = 12/100;
+c = 1;
+N_req = N_vec(end); % vortex panels required is the last value of the converging/increasing N vector
+
+% Call thin airfoil theory function to determine conditions under thin airfoil theory assumptions
+[alpha_L0_thin_0012, alpha_L0_vort_0012, cl_thin_0012, CL_vort_0012, slope_thin_0012, slope_vort_0012] = Thin_Airfoil_Theory(m, p, t, c, N_req, alpha, v_inf);
+
+
+% NACA 0018 case
+m = 0/100;
+p = 0/10;
+t = 18/100;
+c = 1;
+N_req = N_vec(end); % vortex panels required is the last value of the converging/increasing N vector
+
+% Call thin airfoil theory function to determine conditions under thin airfoil theory assumptions
+[alpha_L0_thin_0018, alpha_L0_vort_0018, cl_thin_0018, CL_vort_0018, slope_thin_0018, slope_vort_0018] = Thin_Airfoil_Theory(m, p, t, c, N_req, alpha, v_inf);
+
+
+% Read in experimental data
+% experimental data from digitizer
+data1 = load("NACA0006.mat");
+data1 = data1.data;
+AoA_exp0006 = data1(:,1);
+CL_exp0006 = data1(1,:);
+
+% Find the measured angle of attack value (i.e AoA_exp0006) that occurs when the CL values are
+% closest to 0 (for zero lift angle of attack)
+[~, alpha_index_0006] = min(abs(CL_exp0006)); % finds index where CL is closest to 0
+AoA_L0_exp0006 = AoA_exp0006(alpha_index_0006); % Use this value for table comparison
+
+
+data2 = load("NACA0012.mat");
+data2 = data2.data;
+AoA_exp0012 = data2(:,1);
+CL_exp0012 = data2(1,:);
+
+% Find the measured angle of attack value (i.e AoA_exp0006) that occurs when the CL values crosses 0
+[~, alpha_index_0012] = min(abs(CL_exp0012)); % finds index where CL is closest to 0
+AoA_L0_exp0012 = AoA_exp0012(alpha_index_0012); % Use this value for table comparison
+
+data3 = load("NACA2412.mat");
+data3 = data3.data;
+AoA_exp2412 = data3(:,1);
+CL_exp2412 = data3(1,:);
+
+data4 = load("NACA4412.mat");
+data4 = data4.data;
+AoA_exp4412 = data4(:,1);
+CL_exp4412 = data4(1,:);
+
+
+% Create output tables
+% Output table comparing zero lift angle of attack for each case
+
+% NACA 0006 Airfoil
+Results_Table = table( ...
+    alpha_L0_vort_0006, alpha_L0_thin_0006, AoA_L0_exp0006, ...
+    'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory', 'Experimental_Data'});
+disp(Results_Table)
+
+% NACA 0012 Airfoil
+Results_Table = table( ...
+    alpha_L0_vort_0012, alpha_L0_thin_0012, AoA_L0_exp0012, ...
+    'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory', 'Experimental_Data'});
+disp(Results_Table)
+
+% NACA 0018 Airfoil REPLACE_WITH_DASH_DASH Note experimental data does not exist for this configuration
+Results_Table = table( ...
+    alpha_L0_vort_0018, alpha_L0_thin_0018, ...
+    'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory'});
+disp(Results_Table)
+
+
+% Output table comparing lift curve slope for each case
+
+% NACA 0006 Airfoil
+Results_Table = table( ...
+    slope_vort_0006, slope_thin_0006, AoA_exp0006(1), ...
+    'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory', 'Experimental_Data'});
+disp(Results_Table)
+
+% NACA 0012 Airfoil
+Results_Table = table( ...
+    slope_vort_0012, slope_thin_0012, AoA_exp0012(1), ...
+    'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory', 'Experimental_Data'});
+disp(Results_Table)
+
+% NACA 0018 Airfoil REPLACE_WITH_DASH_DASH Note experimental data does not exist for this configuration
+Results_Table = table( ...
+    slope_vort_0018, slope_thin_0018, ...
+    'VariableNames', {'Vortex_Panel_Method', 'Thin_Airfoil_Theory'});
+disp(Results_Table)
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH PART 2 REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+% example inputs to test PLLT function
+a0_t = 2*pi;
+a0_r = 2*pi; 
+aero_t = 8; 
+aero_r = 8;  
+geo_t = 15; 
+geo_r = 15; 
+N = 100;     
+b = 1;
+% define specified AR and taper ratio values to replicate Anderson figure 5.20
+AR_vec = [4 6 8 10];
+taper_ratio = linspace(0.01,1,100);
+% Preallocate delta for plot
+delta = zeros(length(AR_vec), length(taper_ratio));
+
+for k = 1:length(AR_vec)
+    AR = AR_vec(k);
+for i = 1:length(taper_ratio) % compute geometric inputs based on AR and taper ratio
+    c_r = (2*b)./ (AR * (1+taper_ratio(i)));
+    c_t = taper_ratio(i) * c_r;
+    [e(k,i),c_L,c_Di] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N);
+    delta(k,i) = (1/e(k,i)) - 1;
+end
+end
+figure; hold on; grid on;
+% Anderson 5.20 plot
+plot(taper_ratio, delta(1,:), 'LineWidth', 2);
+plot(taper_ratio, delta(2,:), 'LineWidth', 2);
+plot(taper_ratio, delta(3,:), 'LineWidth', 2);
+plot(taper_ratio, delta(4,:), 'LineWidth', 2);
+xlabel('Taper Ratio (c_t/c_r)')
+ylabel('\delta')
+title('Effect of Aspect Ratio and Taper Ratio on \delta')
+legend('AR = 4','AR = 6','AR = 8','AR = 10','Location','best')
+
+
+
+%% User Defined Functions
+
+%% 1.) NACA Airfoil point distributions and plotting
+
+function [x_b,y_b,x_camber,y_camber] =  NACA_Airfoils(m,p,t,c,N)
+
+
+% Goal/Purpose: Modeling a 4 digit NACA airfoil representation numerically by converting 4 digit
+% inputs into relevant variables and finding discrete x and y coordinates for the top and bottom of
+% the airfoil using numerically derived equations
+
+% Inputs:
+% 1.) m = max airfoil camber. This is the 1st digit (leftmost) of the 4 digit NACA airfoil
+% representation and represents the max camber of the chord in percentage of the chord.
+% 2.) p = location of max camber. This is the 2nd digit from the left of the 4 digit NACA airfoil
+% representation and represents the location of the max camber (measured from the leading edge) in
+% 1/10 of the chord.
+% 3.) t = max airfoil thickness. This is the last 2 digits of the 4 digit NACA airfoil
+% representation and represents the maximum thickness of the airfoil in percent of the chord.
+% 4.) c = total chord length of the airfoil
+% 5.) N = # of employed panels for vortex panel method over each surface
+
+% Outputs: 
+% 1.) x_b = vector containing the x-location of all airfoil boundary points
+% 2.) y_b = vector containing the y-location of all airfoil boundary points
+
+
+
+
+%% Define Thickness Distribution of Airfoil
+for i = 1:N+1
+    theta_i = (i-1)*pi/N;             % goes from 0 to pi
+    x(i) = c/2 + c/2 * cos(theta_i); % x: c → 0
+end
+%disp(length(x));
+y_t = ((t * c)/0.2) * ((0.2969 .* sqrt(x./c)) -  (0.1260*(x./c)) - (0.3516 .* (x./c).^2) + (0.2843 .* (x./c).^3) - (0.1036 .* (x./c).^4)); % numerical equation given
+%disp(length(y_t));
+
+%% Define Camber Line Distribution 
+
+% preallocate variables:
+y_c = zeros(size(x));
+dy_c = zeros(size(x));
+zeta = zeros(size(x));
+
+x_u = zeros(size(x));
+x_L = zeros(size(x));
+
+y_u = zeros(size(x));
+y_L = zeros(size(x));
+
+% Define piecewise function using if statements
+
+for i = 1:length(x)
+    if m == 0 || p == 0
+
+        y_c(i) = 0; dy_c(i) = 0; zeta(i) = 0;
+
+    elseif x(i) < p*c
+
+        y_c(i) = m * (x(i)/(p^2)) * ((2*p) - (x(i)/c)); % camber line distribution
+
+        dy_c(i) = ((2*m)/p) - ((2*m)/(c*p^2))*x(i); % derivative of camber line distribution
+
+        zeta(i) = atan(dy_c(i)); % compute zeta
+
+    elseif x(i) >= p*c && x(i) <= c
+
+        y_c(i) = m * ((c-x(i))/(1-p)^2) * (1 + (x(i)/c) - (2*p)); % camber line distribution
+
+        dy_c(i) = (2*p*m)/(1-p)^2 -((2*m)/(c*(1-p)^2))*x(i); % derivative of camber line distribution
+
+        zeta(i) = atan(dy_c(i)); % compute zeta
+
+    else
+
+        disp('Wrong x-value');
+
+    end
+
+
+    %% Define X and Y locations over the upper and lower surfaces
+
+        x_u(i) = x(i) - y_t(i)*sin(zeta(i)); % x-coordinates over the upper surface
+        x_L(i) = x(i) + y_t(i)*sin(zeta(i)); % x-coordinates over the lower surface
+
+        y_u(i) = y_c(i) + y_t(i)*cos(zeta(i)); % y-coordinates over the upper surface
+        y_L(i) = y_c(i) - y_t(i)*cos(zeta(i)); % y-coordinates over the lower surface
+    
+    end
+
+
+    % Note: we must reverse the order of all lower distributions to plot clockwise
+    % x_u_CW = flip(x_u);
+    % y_u_CW = flip(y_u);
+    % y_L_CW = -1*y_L_CW;
+    % x_L_CW = -x_L_CW;
+
+
+    %% Group into final output variables
+
+    % Note: output most be clockwise starting and ending at the trailing edge
+    % gets rid of duplicate values at leading edge
+    x_b = [x_L, flip(x_u(1:end-1))];
+    y_b = [y_L, flip(y_u(1:end-1))];
+    x_camber = fliplr(x);
+    y_camber = fliplr(y_c);
+
+
+end
+
+
+%% 2.) Vortex Panel Method Code
+
+function [CL] = Vortex_Panel(XB,YB,VINF,ALPHA)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Input:                           %
+%                                  %
+% XB  = Boundary Points x-location %
+% YB  = Boundary Points y-location %
+% VINF  = Free-stream Flow Speed   %
+% ALPHA = AOA                      %
+%                                  %
+% Output:                          %
+%                                  %
+% CL = Sectional Lift Coefficient  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Convert to Radians %
+%%%%%%%%%%%%%%%%%%%%%%
+
+ALPHA = ALPHA*pi/180;
+
+%%%%%%%%%%%%%%%%%%%%%
+% Compute the Chord %
+%%%%%%%%%%%%%%%%%%%%%
+
+CHORD = max(XB)-min(XB);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Determine the Number of Panels %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+M = max(size(XB,1),size(XB,2))-1;
+MP1 = M+1;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Intra-Panel Relationships:                                  %
+%                                                             %
+% Determine the Control Points, Panel Sizes, and Panel Angles %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+for I = 1:M
+    IP1 = I+1;
+    X(I) = 0.5*(XB(I)+XB(IP1));
+    Y(I) = 0.5*(YB(I)+YB(IP1));
+    S(I) = sqrt( (XB(IP1)-XB(I))^2 +( YB(IP1)-YB(I))^2 );
+    THETA(I) = atan2( YB(IP1)-YB(I), XB(IP1)-XB(I) );
+    SINE(I) = sin( THETA(I) );
+    COSINE(I) = cos( THETA(I) );
+    RHS(I) = sin( THETA(I)-ALPHA );
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Inter-Panel Relationships:             %
+%                                        %
+% Determine the Integrals between Panels %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+for I = 1:M
+    for J = 1:M
+        if I == J
+            CN1(I,J) = -1.0;
+            CN2(I,J) = 1.0;
+            CT1(I,J) = 0.5*pi;
+            CT2(I,J) = 0.5*pi;
+        else
+            A = -(X(I)-XB(J))*COSINE(J) - (Y(I)-YB(J))*SINE(J);
+            B = (X(I)-XB(J))^2 + (Y(I)-YB(J))^2;
+            C = sin( THETA(I)-THETA(J) );
+            D = cos( THETA(I)-THETA(J) );
+            E = (X(I)-XB(J))*SINE(J) - (Y(I)-YB(J))*COSINE(J);
+            F = log( 1.0 + S(J)*(S(J)+2*A)/B );
+            G = atan2( E*S(J), B+A*S(J) );
+            P = (X(I)-XB(J)) * sin( THETA(I) - 2*THETA(J) ) ...
+              + (Y(I)-YB(J)) * cos( THETA(I) - 2*THETA(J) );
+            Q = (X(I)-XB(J)) * cos( THETA(I) - 2*THETA(J) ) ...
+              - (Y(I)-YB(J)) * sin( THETA(I) - 2*THETA(J) );
+            CN2(I,J) = D + 0.5*Q*F/S(J) - (A*C+D*E)*G/S(J);
+            CN1(I,J) = 0.5*D*F + C*G - CN2(I,J);
+            CT2(I,J) = C + 0.5*P*F/S(J) + (A*D-C*E)*G/S(J);
+            CT1(I,J) = 0.5*C*F - D*G - CT2(I,J);
+        end
+    end
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Inter-Panel Relationships:           %
+%                                      %
+% Determine the Influence Coefficients %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+for I = 1:M
+    AN(I,1) = CN1(I,1);
+    AN(I,MP1) = CN2(I,M);
+    AT(I,1) = CT1(I,1);
+    AT(I,MP1) = CT2(I,M);
+    for J = 2:M
+        AN(I,J) = CN1(I,J) + CN2(I,J-1);
+        AT(I,J) = CT1(I,J) + CT2(I,J-1);
+    end
+end
+AN(MP1,1) = 1.0;
+AN(MP1,MP1) = 1.0;
+for J = 2:M
+    AN(MP1,J) = 0.0;
+end
+RHS(MP1) = 0.0;
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Solve for the gammas %
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+GAMA = AN\RHS';
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Solve for Tangential Veloity and Coefficient of Pressure %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+for I = 1:M
+    V(I) = cos( THETA(I)-ALPHA );
+    for J = 1:MP1
+        V(I) = V(I) + AT(I,J)*GAMA(J);
+    end
+    CP(I) = 1.0 - V(I)^2;
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Solve for Sectional Coefficient of Lift %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+CIRCULATION = sum(S.*V);
+CL = 2*CIRCULATION/CHORD;
+
+end
+
+
+%% 3.) Thin Airfoil Theory Code
+
+function [alpha_L0_thin, alpha_L0_vort, cl_thin, CL_vort, slope_thin, slope_vort] = Thin_Airfoil_Theory(m, p, t, c, N_ideal, alpha,v_inf)
+
+% Goal/Purpose: Find zero lift angle of attack using thin airfoil theory and computing equation 4.61
+% in anderson. Note that we already have dz/dx from previous derivation input piecewise into our
+% NACA_Airfoils function. Then, simply solve for theta from the equation: x = (c/2)(1-cos(theta))
+% and plug this in for theta and numerically integrate.
+
+% Inputs: 
+% 2.) m = max airfoil camber. This is the 1st digit (leftmost) of the 4 digit NACA airfoil
+% representation and represents the max camber of the chord in percentage of the chord.
+% 3.) p = location of max camber. This is the 2nd digit from the left of the 4 digit NACA airfoil
+% representation and represents the location of the max camber (measured from the leading edge) in
+% 3.) t = max airfoil thickness. This is the last 2 digits of the 4 digit NACA airfoil
+% representation and represents the maximum thickness of the airfoil in percent of the chord.
+% 4.) c = chord length of given airfoil configuration
+% 1/10 of the chord.
+% 4.) N_ideal = ideal number of vortex panels to get within 1% error
+% 5.) alpha = arbitrary input angle of attack value(s) in vector form 
+
+% Outputs:
+% 1.) alpha_L0 = zero lift angle of attack using thin airfoil theory
+
+alpha_vec = linspace(-8,8,N_ideal); %create an angle of attack vector cooresponding to experimental trends
+alpha_rad = (pi/180) .* alpha_vec;
+
+%% Define Thickness Distribution of Airfoil
+
+% Equiangular distribution
+for i = 1:N_ideal+1 
+
+    theta_i = (i-1)*pi/N_ideal;             % goes from 0 to pi
+
+    x(i) = c/2 + c/2 * cos(theta_i); % x: c → 0
+
+end
+
+% y_t = ((t * c)/0.2) * ((0.2969 .* sqrt(x./c)) -  (0.1260*(x./c)) - (0.3516 .* (x./c).^2) + (0.2843 .* (x./c).^3) - (0.1036 .* (x./c).^4)); % numerical equation
+
+%% Define theta_0 in terms of x using chord line equation:
+
+theta_0 =  acos( (1 - x.*(2/c)) );
+
+
+%% Define dz/dx for each part of the piecewise function bounds w.r.t length x
+
+
+for i = 1:length(x)
+    if m == 0 || p == 0 % for if there are any symmetric airfoil components
+
+    dz_dx(i) = 0;
+
+    elseif x(i) >= 0 && x(i) < p*c  % 1st part of piecewise function
+
+    dz_dx(i) = ((2*m)/p) - ((2*m)/(c*p^2))*x(i); % derivative of camber line distribution
+
+
+    elseif x(i) >= p*c && x(i) <= c
+
+    dz_dx(i) = (2*p*m)/(1-p)^2 -((2*m)/(c*(1-p)^2))*x(i); % derivative of camber line distribution
+
+    else
+
+    disp('Wrong x-value');
+
+    end
+end
+
+
+%% Define zero lift angle of attack with equation 4.61 and numerically integrate
+
+integrand = dz_dx.*(cos(theta_0) - 1);
+
+
+alpha_L0_thin = (-1/pi) * trapz(theta_0, integrand); % computing zero lift angle of attack in [rad] w.r.t theta using numerical integration
+
+% loop through for a range of changing alpha values 
+
+[x_b, y_b] =  NACA_Airfoils(m,p,t,c,N_ideal);
+
+
+% loop over all alpha vector values to get vector outputs of CL and cl for each alpha case
+for i = 1:length(alpha_vec) 
+CL_vort(i) = Vortex_Panel(x_b, y_b, v_inf, alpha_vec(i));
+cl_thin(i) = (2*pi)*(alpha_rad(i) - alpha_L0_thin); % compute sectional lift coefficient with given alpha value (note: alpha_L0 should be constant, only alpha input indexes)
+end
+
+% calculate lift slope for both vortex and thin airfoil methods:
+
+p_thin = polyfit(alpha_rad, cl_thin, 1); % ensure both alpha inputs and cl_thin inputs have units of radians
+slope_thin = p_thin(1);
+
+p_vort = polyfit(alpha_rad, CL_vort,1);  % ensure both alpha inputs and cl_thin inputs have units of radians
+slope_vort = p_vort(1);
+intercept_vort = p_vort(2);
+alpha_L0_vort = -intercept_vort / slope_vort; % not sure if this is right. should AoA L0 be a vector or one value?
+
+end
+
+%% 4.) Prandtl Lifting Line Theory Code
+% Goal/Purpose: Analyze the performance of a finite wing by modeling a sheet of bound
+% horseshoe vortex filaments. It solves the fundamental equation of
+% Prandtl's Lifitng Line Theory for finite wings with thick airfoils to find the fourier
+% coefficients, which can then be used to solve for various performace
+% perameters such as e, CL, and CDi.
+
+% Inputs: 
+% 1.) b = wing span (ft)
+% 2.) a0_t = cross-sectional lift slope at the tips (per radian)
+% 3.) a0_r = cross-sectional lift slope at the root (per radian)
+% 4.) c_t = chord at the tips (in feet)
+% 5.) c_r = chord at the root (in feet)
+% 6.) aero_t = zero-lift angle of attack at the tips (in degrees)
+% 7.) aero_r = zero-lift angle of attack at the root (in degrees)
+% 8.) geo_t = geometric angle of attack at the tips (in degrees)
+% 9.) geo_r = geometric angle of attack at the root (in degrees)
+% 10.) N = number of odd terms to include in the series expansion for circulation
+
+% Outputs:
+% 1.) e = span efficiency factor
+% 2.) C_L = coefficient of lift 
+% 3.) C_Di = induced coefficient of drag 
+
+function [e,c_L,c_Di,delta] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N)
+% convert angles of attack to radians
+aero_t = aero_t * (pi/180);
+aero_r = aero_r * (pi/180);
+geo_t = geo_t * (pi/180);
+geo_r = geo_r * (pi/180);
+
+% satisfying the fundamental equation at N locations
+thetas = (1:N) * pi/(2*N); 
+% using odd terms
+n = 1:2:(2*N-1);
+% non-dimensionalize distance along the wing
+y = (b/2) .* cos(thetas);
+y_normalized = abs(y)/(b/2);
+% create linear spans along wing of inputs based on non-dimensionalization
+c = c_r + (c_t - c_r) .* y_normalized;
+a0 = a0_r + (a0_t - a0_r) .* y_normalized;
+AoA_L0 = aero_r + (aero_t - aero_r) .* y_normalized;
+AoA_geo = geo_r + (geo_t - geo_r) .* y_normalized;
+
+% [b] = [A][x] where [x] contain fourier coefficients A1, A2 ....
+b_vec = (AoA_geo - AoA_L0)';
+% i corresponds to theta, j corresponds to N
+% generate A matrix using the fundamental equation of PLLT
+for i = 1:length(n)
+    for j = 1:length(n)
+        A_mat(i,j) = ((4*b)/(a0(i)*c(i))* sin(n(j)*thetas(i)) + (n(j) * ...
+            (sin(n(j)*thetas(i))/sin(thetas(i)))));
+    end
+end
+
+% x corresponds to Fourier coefficient column vector
+x = A_mat\b_vec;
+% solve for delta using solved Fourier Coefficients
+delta = 0;
+for i = 2:length(n)
+    delta = delta + (n(i) * (x(i)/x(1))^2);
+end
+% span efficiency factor
+e = 1 / (1 + delta);
+% planform area
+S = (b/2)*(c_r + c_t);
+% Aspect ratio
+AR = b^2/S;
+% Solve for coefficient of lift using first fourier term
+c_L = x(1)*pi*AR;
+
+% compute Cdi by summing fourier coefficients
+sum = 0;
+for i = 1:length(n)
+    sum = sum + (n(i) * x(i)^2) * (pi/2);
+    c_Di = ((2*b^2)/S) * sum;
+end
+
+end
+
+##### SOURCE END #####
+-->
+</body>
+</html>
