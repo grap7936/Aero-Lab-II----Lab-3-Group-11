@@ -516,26 +516,18 @@ for k = 1:length(alphas)
     CL_0012(k) = Vortex_Panel(xb_0012, yb_0012, v_inf, alphas(k)); % find different CL values at different angle of attack values over a range using VP method
 end
 
-p_0012   = polyfit(alpha_rad, CL_0012, 1); % use polyfit to find coefficients for use in finding lift slope and alpha_L0
-a0_t     = p_0012(1);                % lift slope [1/rad]
-aero_t   = (-p_0012(2)/p_0012(1)) * (180/pi); % zero-lift AoA [deg]
-
-
-% display lift slopes and AoAs
-fprintf('--- Sectional Properties from Vortex Panel ---\n');
-fprintf('NACA 2412 (root): a0 = %.4f /rad,  aL0 = %.4f deg\n', a0_r, aero_r);
-fprintf('NACA 0012 (tip):  a0 = %.4f /rad,  aL0 = %.4f deg\n', a0_t, aero_t);
-
+p_0012 = polyfit(alpha_rad, CL_0012, 1); % use polyfit to find coefficients for use in finding lift slope and alpha_L0
+a0_t = p_0012(1);   % lift slope [1/rad]
+aero_t = (-p_0012(2)/p_0012(1)) * (180/pi); % zero-lift AoA [deg]
 
 % Convergence Study
-N_accurate = 201; % pick high term to calculate accurrate vals to compare 
+N_accurate = 101; % pick high term to calculate accurrate vals to compare 
 N_terms_vec = 1:2:51;   % N vals to test
 [~, CL_ref, CDi_ref, ~] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, (geo_t+alpha_wing), (geo_r + alpha_wing), N_accurate);
 
-% Preallocate CL and CDi vectors for the convergence study
+% Preallocate CL and CDi vectors for the convergence loop
 CL_conv  = zeros(size(N_terms_vec));
 CDi_conv = zeros(size(N_terms_vec));
-
 
 for idx = 1:length(N_terms_vec)
     N_odd = N_terms_vec(idx);
@@ -544,11 +536,11 @@ for idx = 1:length(N_terms_vec)
 end
 
 
-% Relative error vs reference --> converted to percentages by multiplying by 100 [%]
+% Relative error vs reference as percent difference
 err_CL  = abs((CL_conv  - CL_ref) / CL_ref)  * 100;
 err_CDi = abs((CDi_conv - CDi_ref)/ CDi_ref) * 100;
 
-% Find first N where error falls below each threshold
+% Find first N where error is below each threshold
 thresholds = [10, 1, 0.1]; % note that because previous error values are multiplied by 100, these values are then also in [%]
 thresh_labels = {'10%', '1%', '0.1%'};
 
@@ -556,14 +548,14 @@ N_conv_CL  = zeros(1,3);
 N_conv_CDi = zeros(1,3);
 
 for j = 1:3
-    % find returns indices — take the first one below threshold
+    % find the first val below threshold
     idx_CL  = find(err_CL  < thresholds(j), 1, 'first');
     idx_CDi = find(err_CDi < thresholds(j), 1, 'first');
     N_conv_CL(j)  = N_terms_vec(idx_CL);
     N_conv_CDi(j) = N_terms_vec(idx_CDi);
 end
 
-% --- Convergence Table ---
+% Deliverable 1: Convergence Table
 fprintf('\n--- Convergence Table (alpha = 4 deg) ---\n');
 fprintf('%-12s | %-10s %-12s | %-10s %-12s\n', ...
         'Threshold','N (CL)','CL','N (CDi)','CDi');
@@ -576,7 +568,7 @@ for j = 1:3
         N_conv_CDi(j), CDi_conv(i_CDi));
 end
 
-% --- Convergence Plots ---
+% Deliverable 2: Convergence Plots
 
 figure();
 
@@ -586,7 +578,7 @@ for j = 1:3
     xline(N_conv_CL(j), '--', 'Color', colors_thresh{j}, 'LineWidth', 1.2, ...
           'Label', thresh_labels{j}, 'LabelVerticalAlignment', 'bottom');
 end
-xlabel('Number of Odd Terms in Series');
+xlabel('Number of Odd Terms');
 ylabel('C_L');
 title('C_L Convergence vs. Number of Odd Terms');
 legend('C_L', '10% error', '1% error', '0.1% error', 'Location', 'east');
@@ -598,7 +590,7 @@ for j = 1:3
     xline(N_conv_CDi(j), '--', 'Color', colors_thresh{j}, 'LineWidth', 1.2, ...
           'Label', thresh_labels{j}, 'LabelVerticalAlignment', 'bottom');
 end
-xlabel('Number of Odd Terms in Series');
+xlabel('Number of Odd Terms');
 ylabel('C_{D,i}');
 title('C_{D,i} Convergence vs. Number of Odd Terms');
 legend('C_{D,i}', '10% error', '1% error', '0.1% error', 'Location', 'east');
@@ -606,120 +598,92 @@ grid on;
 
 print('D2_convergence', '-dpng', '-r500');
 
-%% -------------------------------------------------------
-%  Cruise Performance
-%  Standard atmosphere at 10,000 ft, 100 knots
-% -------------------------------------------------------
+%  Find L, Di and L/D with standard atmosphere at 10,000 ft, 100 knots
 
-% Standard atmosphere — 10,000 ft converted to meters
-alt_m = 10000 * 0.3048;   % 3048 m
-T0=288.15; P0=101325; rho0=1.225; L_rate=0.0065; R=287.05; g=9.81;
-T_cruise   = T0 - L_rate*alt_m;
-rho_cruise = rho0 * (T_cruise/T0)^(g/(L_rate*R) - 1);  % [kg/m^3]
+alt_m = 10000;
+% standard atmosphere density 
+rho = .001756; %slugs/ft^3
+V_cruise = 100 * 1.68781;   % knots to ft/s 
 
-V_cruise = 100 * 0.51444;   % 100 knots → m/s
+q_inf = 0.5 * rho * V_cruise^2;  % dynamic pressure [Pa]
 
-% Convert planform area to m^2 (was in ft^2)
-S_m2 = S * 0.0929;
-
-q_inf = 0.5 * rho_cruise * V_cruise^2;  % dynamic pressure [Pa]
-
-% Use most restrictive N (worst case between CL and CDi at 0.1% threshold)
+% Use most restrictive N at 0.1% 
 N_use = max(N_conv_CL(3), N_conv_CDi(3));
-fprintf('\nUsing N = %d odd terms for cruise and sweep analysis\n', N_use);
 
-[~, CL_cruise, CDi_cruise, ~] = PLLT(b, a0_t, a0_r, c_t, c_r, ...
-                                       aero_t, aero_r, geo_t, geo_r, N_use);
+[~, CL_cruise, CDi_cruise, ~] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t+alpha_wing, geo_r + alpha_wing, N_use);
 
 
 % Read in Data
 data_CD_2412 = load("cd2_2412.mat");
 % Devectorize
 cd_2412_data = data_CD_2412.data(:,2);
-alpha_cd_data_2412 = 10 .* data_CD_2412.data(:,1); % Note that this is actually the CL part of the CL vs. CD graph so this needs to be reconciled to angle of attack or possibly to use sweep angle of attack from earlier
+CL_cd_data_2412 = data_CD_2412.data(:,1); % Note that this is actually the CL part of the CL vs. CD graph so this needs to be reconciled to angle of attack or possibly to use sweep angle of attack from earlier
 
 % Read in Data
 data_CD_0012 = load("cd2_0012.mat");
 % Devectorize
 cd_0012_data = data_CD_0012.data(:,2);
-alpha_cd_data_0012 = 10 .* data_CD_0012.data(:,1); % Note that this is actually the CL part of the CL vs. CD graph so this needs to be reconciled to angle of attack or possibly to use sweep angle of attack from earlier
-% Note, these are of different lengths and thus we must make them the same length to be able to
-% perform future operations on them
-% alpha_cd_data_0012 = alpha_cd_data_0012(1:end-2);
-% cd_0012_data = cd_0012_data(1:end-2);
-
-
-
+CL_cd_data_0012 = data_CD_0012.data(:,1); % Note that this is actually the CL part of the CL vs. CD graph so this needs to be reconciled to angle of attack or possibly to use sweep angle of attack from earlier
 
 % Spanwise average cd
-cd_r_cruise = interp1(alpha_cd_data_2412, cd_2412_data, alpha_wing, 'linear', 'extrap');
-cd_t_cruise = interp1(alpha_cd_data_0012, cd_0012_data, alpha_wing, 'linear', 'extrap');
-cd_avg      = 0.5*(cd_r_cruise + cd_t_cruise);
+cd_r_span = interp1(CL_cd_data_2412, cd_2412_data, CL_cruise, 'linear', 'extrap');
+cd_t_span = interp1(CL_cd_data_0012, cd_0012_data, CL_cruise, 'linear', 'extrap');
+cd_avg = 0.5*(cd_r_span + cd_t_span);
 
 CD_total = cd_avg + CDi_cruise;
 
-% Forces (convert S from ft^2 to m^2 for SI forces)
-L_force  = q_inf * S_m2 * CL_cruise;
-Di_force = q_inf * S_m2 * CDi_cruise;
-D_force  = q_inf * S_m2 * CD_total;
+% calculate forces
+L_force  = q_inf * S * CL_cruise;
+Di_force = q_inf * S * CDi_cruise;
+D_force  = q_inf * S * CD_total;
 LD_ratio = L_force / D_force;
 
-fprintf('\n--- Cruise at 100 kts, 10,000 ft ---\n');
-fprintf('Density:           %.4f kg/m^3\n', rho_cruise);
-fprintf('Airspeed:          %.2f m/s\n',    V_cruise);
-fprintf('Dynamic pressure:  %.2f Pa\n',     q_inf);
-fprintf('CL:                %.4f\n',         CL_cruise);
-fprintf('CDi:               %.6f\n',         CDi_cruise);
-fprintf('cd (profile avg):  %.6f\n',         cd_avg);
-fprintf('CD (total):        %.6f\n',         CD_total);
-fprintf('Lift L:            %.1f N\n',       L_force);
-fprintf('Induced Drag Di:   %.1f N\n',       Di_force);
-fprintf('Total Drag D:      %.1f N\n',       D_force);
+% deliverable 3: table of L, Cdi, and L/D at 100 knots and 10000 feet
+fprintf('Lift L:            %.1f Lb\n',       L_force);
+fprintf('Induced Drag Di:   %.1f Lb\n',       Di_force);
 fprintf('L/D:               %.2f\n',         LD_ratio);
 
-%% -------------------------------------------------------
-%  Drag Breakdown & L/D vs AoA
-% -------------------------------------------------------
-alpha_aoa = -12:1:12;   % [deg] sweep
-CL_sw   = zeros(size(alpha_aoa));
-CDi_sw  = zeros(size(alpha_aoa));
-cd_sw   = zeros(size(alpha_aoa));
-CD_sw   = zeros(size(alpha_aoa));
-LD_sw   = zeros(size(alpha_aoa));
+% Deliverable 4: Drag Plot & L/D for range of AoA vals
+
+alpha_aoa = -8:1:12;   % [deg] sweep
+CL_plot   = zeros(size(alpha_aoa));
+CDi_plot  = zeros(size(alpha_aoa));
+cd_plot   = zeros(size(alpha_aoa));
+CD_plot   = zeros(size(alpha_aoa));
+LD_plot   = zeros(size(alpha_aoa));
 
 for k = 1:length(alpha_aoa)
-    % Update geo_r to reflect wing AoA (geo_t stays 0 due to washout)
+   
     geo_r_k = geo_r + alpha_aoa(k);   % root incidence + wing AoA
     geo_t_k = geo_t + alpha_aoa(k);   % tip incidence + wing AoA
 
-    [~, CL_sw(k), CDi_sw(k), ~] = PLLT(b, a0_t, a0_r, c_t, c_r, ...
-                                         aero_t, aero_r, geo_t_k, geo_r_k, N_use);
+    [~, CL_plot(k), CDi_plot(k), ~] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, geo_t_k, geo_r_k, N_use);
 
     % Profile drag at each AoA — spanwise average
-    cd_r_k  = interp1(alpha_cd_data_2412, cd_2412_data, alpha_aoa(k), 'linear', 'extrap');
-    cd_t_k  = interp1(alpha_cd_data_0012, cd_0012_data, alpha_aoa(k), 'linear', 'extrap');
-    cd_sw(k) = 0.5*(cd_r_k + cd_t_k);
-    CD_sw(k) = cd_sw(k) + CDi_sw(k);
-    LD_sw(k) = CL_sw(k) / CD_sw(k);
+    cd_r_k  = interp1(CL_cd_data_2412, cd_2412_data, CL_plot(k), 'linear', 'extrap');
+    cd_t_k  = interp1(CL_cd_data_0012, cd_0012_data, CL_plot(k), 'linear', 'extrap');
+    cd_plot(k) = 0.5*(cd_r_k + cd_t_k);
+    CD_plot(k) = cd_plot(k) + CDi_plot(k);
+    LD_plot(k) = CL_plot(k) / CD_plot(k);
 end
 
-% --- Drag breakdown ---
-figure('Name','D4 — Drag Breakdown');
-plot(alpha_aoa, CD_sw,  'k-',  'LineWidth', 2,   'DisplayName', 'C_D total'); hold on;
-plot(alpha_aoa, CDi_sw, 'r--', 'LineWidth', 1.5, 'DisplayName', 'C_{D,i} induced');
-plot(alpha_aoa, cd_sw,  'b:',  'LineWidth', 1.5, 'DisplayName', 'c_d profile');
+% drag profile
+figure();
+plot(alpha_aoa, CD_plot,  'k-',  'LineWidth', 2,   'DisplayName', 'C_D total'); hold on;
+plot(alpha_aoa, CDi_plot, 'r--', 'LineWidth', 1.5, 'DisplayName', 'C_{D,i} induced');
+plot(alpha_aoa, cd_plot,  'b:',  'LineWidth', 1.5, 'DisplayName', 'c_d profile');
 xlabel('Angle of Attack \alpha [deg]');
 ylabel('Drag Coefficient');
 title('Drag Coefficient vs. Angle of Attack — Cessna 140 Wing');
 legend('Location', 'northwest'); grid on;
 print('D4_drag_breakdown', '-dpng', '-r500');
 
-% --- L/D ---
-figure('Name','D5 — Aerodynamic Efficiency');
-plot(alpha_aoa, LD_sw, 'b-', 'LineWidth', 2);
+% L/D plot
+figure();
+plot(alpha_aoa, LD_plot, 'b-', 'LineWidth', 2);
 xlabel('Angle of Attack \alpha [deg]');
 ylabel('L/D');
-title('Aerodynamic Efficiency L/D vs. Angle of Attack — Cessna 140 Wing');
+title('L/D vs. Angle of Attack');
 grid on;
 print('D5_LD_ratio', '-dpng', '-r500');
 
