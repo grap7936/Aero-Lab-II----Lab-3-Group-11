@@ -528,9 +528,9 @@ fprintf('NACA 0012 (tip):  a0 = %.4f /rad,  aL0 = %.4f deg\n', a0_t, aero_t);
 
 
 % Convergence Study
-%  Sweep odd number of terms, record CL and CDi
-
-N_terms_vec = 1:2:201;   % odd terms: 1,3,5,...,201 --> note that this value is picked arbitrarily but simply selected at a high and odd value to ensure high accuracy
+N_accurate = 201; % pick high term to calculate accurrate vals to compare 
+N_terms_vec = 1:2:51;   % N vals to test
+[~, CL_ref, CDi_ref, ~] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, (geo_t+alpha_wing), (geo_r + alpha_wing), N_accurate);
 
 % Preallocate CL and CDi vectors for the convergence study
 CL_conv  = zeros(size(N_terms_vec));
@@ -543,9 +543,6 @@ for idx = 1:length(N_terms_vec)
                                                  aero_t, aero_r, (geo_t+alpha_wing), (geo_r + alpha_wing), N_odd);
 end
 
-% Use highest-term value as reference
-CL_ref  = CL_conv(end);
-CDi_ref = CDi_conv(end);
 
 % Relative error vs reference --> converted to percentages by multiplying by 100 [%]
 err_CL  = abs((CL_conv  - CL_ref) / CL_ref)  * 100;

@@ -482,8 +482,8 @@ c_t = 3  + 8.5/12;
 S   = 0.5*(c_r + c_t)*b; 
 AR  = b^2 / S; 
 
-geo_r = 5;   
-geo_t = 4;   
+geo_r = 1;   
+geo_t = 0;   
 
 alpha_wing = 4;  
 v_inf = 50;     
@@ -494,7 +494,7 @@ v_inf = 50;
 
 num = 100;                   % pick a number of panels that is greater than our 1 % error case number of vortex panels for part 2
 alphas = -12:1:12;        
-alphas_rad = alphas * pi/180;
+alpha_rad = alphas * pi/180;
 
 % NACA 2412 (root)
 CL_2412 = zeros(size(alphas)); 
@@ -504,7 +504,7 @@ for k = 1:length(alphas)
     CL_2412(k) = Vortex_Panel(xb_2412, yb_2412, v_inf, alphas(k)); 
 end
 % get lift slope and zero lift AoA
-p_2412 = polyfit(alphas_rad, CL_2412, 1);
+p_2412 = polyfit(alpha_rad, CL_2412, 1);
 a0_r = p_2412(1);                    
 aero_r = (-p_2412(2)/p_2412(1)) * (180/pi);  
 
@@ -516,7 +516,7 @@ for k = 1:length(alphas)
     CL_0012(k) = Vortex_Panel(xb_0012, yb_0012, v_inf, alphas(k)); % find different CL values at different angle of attack values over a range using VP method
 end
 
-p_0012   = polyfit(alphas_rad, CL_0012, 1); % use polyfit to find coefficients for use in finding lift slope and alpha_L0
+p_0012   = polyfit(alpha_rad, CL_0012, 1); % use polyfit to find coefficients for use in finding lift slope and alpha_L0
 a0_t     = p_0012(1);                % lift slope [1/rad]
 aero_t   = (-p_0012(2)/p_0012(1)) * (180/pi); % zero-lift AoA [deg]
 
@@ -528,9 +528,9 @@ fprintf('NACA 0012 (tip):  a0 = %.4f /rad,  aL0 = %.4f deg\n', a0_t, aero_t);
 
 
 % Convergence Study
-%  Sweep odd number of terms, record CL and CDi
-
-N_terms_vec = 1:2:51;   % odd terms: 1,3,5,...,201 --> note that this value is picked arbitrarily but simply selected at a high and odd value to ensure high accuracy
+N_accurate = 201; % pick high term to calculate accu
+N_terms_vec = 1:2:51;   % this value is picked arbitrarily but simply selected at a high and odd value to ensure high accuracy
+[~, CL_ref, CDi_ref, ~] = PLLT(b, a0_t, a0_r, c_t, c_r, aero_t, aero_r, (geo_t+alpha_wing), (geo_r + alpha_wing), N_accurate);
 
 % Preallocate CL and CDi vectors for the convergence study
 CL_conv  = zeros(size(N_terms_vec));
@@ -540,12 +540,9 @@ CDi_conv = zeros(size(N_terms_vec));
 for idx = 1:length(N_terms_vec)
     N_odd = N_terms_vec(idx);
     [~, CL_conv(idx), CDi_conv(idx), ~] = PLLT(b, a0_t, a0_r, c_t, c_r, ...
-                                                 aero_t, aero_r, geo_t, geo_r, N_odd);
+                                                 aero_t, aero_r, (geo_t+alpha_wing), (geo_r + alpha_wing), N_odd);
 end
 
-% Use highest-term value as reference
-CL_ref  = CL_conv(end);
-CDi_ref = CDi_conv(end);
 
 % Relative error vs reference --> converted to percentages by multiplying by 100 [%]
 err_CL  = abs((CL_conv  - CL_ref) / CL_ref)  * 100;
@@ -582,6 +579,7 @@ end
 % --- Convergence Plots ---
 
 figure();
+
 plot(N_terms_vec, CL_conv, 'b-', 'LineWidth', 1.5); hold on;
 colors_thresh = {'r','m','k'};
 for j = 1:3
