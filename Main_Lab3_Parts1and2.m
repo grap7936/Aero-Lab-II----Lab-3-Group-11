@@ -12,12 +12,26 @@
 % be evaluated.
 % Task 4: Uses previous results to plot and compare sectional lift coefficient versus varying angle
 % of attack for thin airfoil theory, vortex panel method and experimental results.
+
 % ---------------- PART 2 -------------------------
-% Task 1: Created Pradtl's lifting line theory function and recreated Anderson 5.20 plot to validate
+% Task 1: Created Prandtl's lifting line theory function and recreated Anderson 5.20 plot to validate
+
+% ---------------- PART 3 -------------------------
+% --Deliverable 1: In a table compare N number of terms needed for C_L and C_Di values to converge within various 
+% degrees of error using both vortex panel method and PLLT for different wing parameters and conditions.
+% Also compare final C_L and C_Di values at given error margins
+% --Deliverable 2: Plot and compare different C_L and C_Di values w.r.t. different numbers of panels,
+% N, used and input lines indicating where certain error margins are.
+% --Deliverable 3: In a table, compare different lift (L), induced drag (D_i), and lift to drag ratio
+% (L/D) values at different flight conditions.
+% --Deliverable 4: Plot total drag w.r.t angle of attack and indicate how much of total drag is made
+% up from induced drag and profile drag
+% --Deliverable 5: PLot L/D as a function of angle of attack for each wing configuration
+% --Deliverable 6: Discussion questions and analysis
 
 % Author(s): Graeme Appel, McKenna Coakley, Jake Wzientek, Cullen Watz
 
-% Last Revised: 4/14/2026
+% Last Revised: 4/21/2026
 
 
 
@@ -457,80 +471,88 @@ ylabel('\delta')
 title('Effect of Aspect Ratio and Taper Ratio on \delta')
 legend('AR = 4','AR = 6','AR = 8','AR = 10','Location','best')
 
-
-%% Part 3
 %% ---------------- PART 3 -------------------------
 % clc
 
 %% Wing Geometry — Cessna 140
-b   = 33 + 4/12;        % span [ft]
-c_r = 5  + 4/12;        % root chord [ft]
-c_t = 3  + 8.5/12;      % tip chord [ft]
-S   = 0.5*(c_r + c_t)*b; % planform area [ft^2]
-AR  = b^2 / S;
+% all dimensions in feet and degrees
+b   = 33 + 4/12;       
+c_r = 5  + 4/12;        
+c_t = 3  + 8.5/12;      
+S   = 0.5*(c_r + c_t)*b; 
+AR  = b^2 / S; 
 
-geo_r = 1;   % geometric AoA at root [deg] — wing twist
-geo_t = 0;   % geometric AoA at tip  [deg]
+geo_r = 1;   
+geo_t = 0;   
 
-alpha_wing = 4;  % [deg] — used for convergence study
-v_inf = 50;      % [m/s] — arbitrary, inviscid so VINF doesn't affect CL
+alpha_wing = 4;  
+v_inf = 50;     
 
-%% -------------------------------------------------------
-%  Get a0 and aL0 from Vortex Panel for each airfoil
-%  Run over a range of alpha
-% -------------------------------------------------------
-N_vp = 100;                   % panels per surface for VP
-alpha_sweep_vp = -5:1:8;          % [deg] sweep range
-alpha_sweep_rad = alpha_sweep_vp * pi/180;
+%  Get a0 and AoA L=0 from vortex panel for each airfoil (same polyfit method as used in thin_airfoil_theory function): first use
+%  NACA_airfoils function to get x and y coords
 
-% --- NACA 2412 (root) ---
-CL_2412 = zeros(size(alpha_sweep_vp));
-[xb_2412, yb_2412] = NACA_Airfoils(0.02, 0.4, 0.12, 1, N_vp);
-for k = 1:length(alpha_sweep_vp)
-    CL_2412(k) = Vortex_Panel(xb_2412, yb_2412, v_inf, alpha_sweep_vp(k));
+
+num = 100;                   % pick a number of panels that is greater than our 1 % error case number of vortex panels for part 2
+alphas = -12:1:12;        
+alpha_rad = alphas * pi/180;
+
+% NACA 2412 (root)
+CL_2412 = zeros(size(alphas)); 
+[xb_2412, yb_2412] = NACA_Airfoils(0.02, 0.4, 0.12, 1, num); 
+
+for k = 1:length(alphas)
+    CL_2412(k) = Vortex_Panel(xb_2412, yb_2412, v_inf, alphas(k)); 
 end
-p_2412   = polyfit(alpha_sweep_rad, CL_2412, 1);
-a0_r     = p_2412(1);                    % lift slope [1/rad]
-aero_r   = (-p_2412(2)/p_2412(1)) * (180/pi);  % zero-lift AoA [deg]
+% get lift slope and zero lift AoA
+p_2412 = polyfit(alpha_rad, CL_2412, 1);
+a0_r = p_2412(1);                    
+aero_r = (-p_2412(2)/p_2412(1)) * (180/pi);  
 
-% --- NACA 0012 (tip) ---
-CL_0012 = zeros(size(alpha_sweep_vp));
-[xb_0012, yb_0012] = NACA_Airfoils(0, 0, 0.12, 1, N_vp);
-for k = 1:length(alpha_sweep_vp)
-    CL_0012(k) = Vortex_Panel(xb_0012, yb_0012, v_inf, alpha_sweep_vp(k));
+% NACA 0012 (tip) 
+CL_0012 = zeros(size(alphas)); % preallocate size
+[xb_0012, yb_0012] = NACA_Airfoils(0, 0, 0.12, 1, num); % define x and y coordinates for 0012 airfoil
+
+for k = 1:length(alphas)
+    CL_0012(k) = Vortex_Panel(xb_0012, yb_0012, v_inf, alphas(k)); % find different CL values at different angle of attack values over a range using VP method
 end
-p_0012   = polyfit(alpha_sweep_rad, CL_0012, 1);
-a0_t     = p_0012(1);
-aero_t   = (-p_0012(2)/p_0012(1)) * (180/pi);
 
+p_0012   = polyfit(alpha_rad, CL_0012, 1); % use polyfit to find coefficients for use in finding lift slope and alpha_L0
+a0_t     = p_0012(1);                % lift slope [1/rad]
+aero_t   = (-p_0012(2)/p_0012(1)) * (180/pi); % zero-lift AoA [deg]
+
+
+% display lift slopes and AoAs
 fprintf('--- Sectional Properties from Vortex Panel ---\n');
 fprintf('NACA 2412 (root): a0 = %.4f /rad,  aL0 = %.4f deg\n', a0_r, aero_r);
 fprintf('NACA 0012 (tip):  a0 = %.4f /rad,  aL0 = %.4f deg\n', a0_t, aero_t);
 
-%% -------------------------------------------------------
+
 % Convergence Study
 %  Sweep odd number of terms, record CL and CDi
-% -------------------------------------------------------
-N_terms_vec = 1:2:201;   % odd terms: 1,3,5,...,201
+
+N_terms_vec = 1:2:201;   % odd terms: 1,3,5,...,201 --> note that this value is picked arbitrarily but simply selected at a high and odd value to ensure high accuracy
+
+% Preallocate CL and CDi vectors for the convergence study
 CL_conv  = zeros(size(N_terms_vec));
 CDi_conv = zeros(size(N_terms_vec));
+
 
 for idx = 1:length(N_terms_vec)
     N_odd = N_terms_vec(idx);
     [~, CL_conv(idx), CDi_conv(idx), ~] = PLLT(b, a0_t, a0_r, c_t, c_r, ...
-                                                 aero_t, aero_r, geo_t, geo_r, N_odd);
+                                                 aero_t, aero_r, (geo_t+alpha_wing), (geo_r + alpha_wing), N_odd);
 end
 
 % Use highest-term value as reference
 CL_ref  = CL_conv(end);
 CDi_ref = CDi_conv(end);
 
-% Relative error vs reference [%]
+% Relative error vs reference --> converted to percentages by multiplying by 100 [%]
 err_CL  = abs((CL_conv  - CL_ref) / CL_ref)  * 100;
 err_CDi = abs((CDi_conv - CDi_ref)/ CDi_ref) * 100;
 
 % Find first N where error falls below each threshold
-thresholds = [10, 1, 0.1];
+thresholds = [10, 1, 0.1]; % note that because previous error values are multiplied by 100, these values are then also in [%]
 thresh_labels = {'10%', '1%', '0.1%'};
 
 N_conv_CL  = zeros(1,3);
@@ -558,9 +580,9 @@ for j = 1:3
 end
 
 % --- Convergence Plots ---
-figure('Name','Convergence of CL and CDi');
 
-subplot(2,1,1);
+figure();
+
 plot(N_terms_vec, CL_conv, 'b-', 'LineWidth', 1.5); hold on;
 colors_thresh = {'r','m','k'};
 for j = 1:3
@@ -573,7 +595,7 @@ title('C_L Convergence vs. Number of Odd Terms');
 legend('C_L', '10% error', '1% error', '0.1% error', 'Location', 'east');
 grid on;
 
-subplot(2,1,2);
+figure();
 plot(N_terms_vec, CDi_conv, 'r-', 'LineWidth', 1.5); hold on;
 for j = 1:3
     xline(N_conv_CDi(j), '--', 'Color', colors_thresh{j}, 'LineWidth', 1.2, ...
@@ -612,19 +634,29 @@ fprintf('\nUsing N = %d odd terms for cruise and sweep analysis\n', N_use);
 [~, CL_cruise, CDi_cruise, ~] = PLLT(b, a0_t, a0_r, c_t, c_r, ...
                                        aero_t, aero_r, geo_t, geo_r, N_use);
 
-% Profile drag cd — from Theory of Wing Sections (Abbott & von Doenhoff)
-% NACA 2412 and 0012 at Re~3e6, Appendix IV. Digitized key points:
-%   alpha [deg]:  -4     0      2      4      6      8      10
-%   cd_2412:    0.0080  0.0060 0.0063 0.0070 0.0083 0.0110 0.0150
-%   cd_0012:    0.0075  0.0055 0.0058 0.0065 0.0078 0.0100 0.0140
-% Replace these values with your own digitized data for full accuracy.
-alpha_cd_data = [-4,  0,    2,    4,    6,    8,    10  ];
-cd_2412_data  = [0.0080, 0.0060, 0.0063, 0.0070, 0.0083, 0.0110, 0.0150];
-cd_0012_data  = [0.0075, 0.0055, 0.0058, 0.0065, 0.0078, 0.0100, 0.0140];
+
+% Read in Data
+data_CD_2412 = load("cd2_2412.mat");
+% Devectorize
+cd_2412_data = data_CD_2412.data(:,2);
+alpha_cd_data_2412 = 10 .* data_CD_2412.data(:,1); % Note that this is actually the CL part of the CL vs. CD graph so this needs to be reconciled to angle of attack or possibly to use sweep angle of attack from earlier
+
+% Read in Data
+data_CD_0012 = load("cd2_0012.mat");
+% Devectorize
+cd_0012_data = data_CD_0012.data(:,2);
+alpha_cd_data_0012 = 10 .* data_CD_0012.data(:,1); % Note that this is actually the CL part of the CL vs. CD graph so this needs to be reconciled to angle of attack or possibly to use sweep angle of attack from earlier
+% Note, these are of different lengths and thus we must make them the same length to be able to
+% perform future operations on them
+% alpha_cd_data_0012 = alpha_cd_data_0012(1:end-2);
+% cd_0012_data = cd_0012_data(1:end-2);
+
+
+
 
 % Spanwise average cd
-cd_r_cruise = interp1(alpha_cd_data, cd_2412_data, alpha_wing, 'linear', 'extrap');
-cd_t_cruise = interp1(alpha_cd_data, cd_0012_data, alpha_wing, 'linear', 'extrap');
+cd_r_cruise = interp1(alpha_cd_data_2412, cd_2412_data, alpha_wing, 'linear', 'extrap');
+cd_t_cruise = interp1(alpha_cd_data_0012, cd_0012_data, alpha_wing, 'linear', 'extrap');
 cd_avg      = 0.5*(cd_r_cruise + cd_t_cruise);
 
 CD_total = cd_avg + CDi_cruise;
@@ -651,7 +683,7 @@ fprintf('L/D:               %.2f\n',         LD_ratio);
 %% -------------------------------------------------------
 %  Drag Breakdown & L/D vs AoA
 % -------------------------------------------------------
-alpha_aoa = -4:1:12;   % [deg] sweep
+alpha_aoa = -12:1:12;   % [deg] sweep
 CL_sw   = zeros(size(alpha_aoa));
 CDi_sw  = zeros(size(alpha_aoa));
 cd_sw   = zeros(size(alpha_aoa));
@@ -667,8 +699,8 @@ for k = 1:length(alpha_aoa)
                                          aero_t, aero_r, geo_t_k, geo_r_k, N_use);
 
     % Profile drag at each AoA — spanwise average
-    cd_r_k  = interp1(alpha_cd_data, cd_2412_data, alpha_aoa(k), 'linear', 'extrap');
-    cd_t_k  = interp1(alpha_cd_data, cd_0012_data, alpha_aoa(k), 'linear', 'extrap');
+    cd_r_k  = interp1(alpha_cd_data_2412, cd_2412_data, alpha_aoa(k), 'linear', 'extrap');
+    cd_t_k  = interp1(alpha_cd_data_0012, cd_0012_data, alpha_aoa(k), 'linear', 'extrap');
     cd_sw(k) = 0.5*(cd_r_k + cd_t_k);
     CD_sw(k) = cd_sw(k) + CDi_sw(k);
     LD_sw(k) = CL_sw(k) / CD_sw(k);
@@ -1078,7 +1110,8 @@ end
 % 3.) C_Di = induced coefficient of drag 
 
 function [e,c_L,c_Di,delta] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N)
-% convert angles of attack to radians
+
+% convert angle of attack inputs into radians
 aero_t = aero_t * (pi/180);
 aero_r = aero_r * (pi/180);
 geo_t = geo_t * (pi/180);
@@ -1086,7 +1119,7 @@ geo_r = geo_r * (pi/180);
 
 % satisfying the fundamental equation at N locations
 thetas = (1:N) * pi/(2*N); 
-% using odd terms
+% using odd terms because we are assuming a symmetric lift distribution
 n = 1:2:(2*N-1);
 % non-dimensionalize distance along the wing
 y = (b/2) .* cos(thetas);
@@ -1097,7 +1130,7 @@ a0 = a0_r + (a0_t - a0_r) .* y_normalized;
 AoA_L0 = aero_r + (aero_t - aero_r) .* y_normalized;
 AoA_geo = geo_r + (geo_t - geo_r) .* y_normalized;
 
-% [b] = [A][x] where [x] contain fourier coefficients A1, A2 ....
+% [b] = [A][x] where [x] contain fourier coefficients A1, A3 ....
 b_vec = (AoA_geo - AoA_L0)';
 % i corresponds to theta, j corresponds to N
 % generate A matrix using the fundamental equation of PLLT
@@ -1132,4 +1165,3 @@ for i = 1:length(n)
 end
 
 end
-
