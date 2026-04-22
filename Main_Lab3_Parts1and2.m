@@ -575,6 +575,7 @@ ylabel('C_L');
 title('C_L Convergence vs. Number of Odd Terms');
 legend('C_L', '10% error', '1% error', '0.1% error', 'Location', 'east');
 grid on;
+print('CL_convergence', '-dpng', '-r500');
 
 figure();
 plot(N_terms_vec, CDi_conv, 'r-', 'LineWidth', 1.5); 
@@ -587,8 +588,7 @@ ylabel('C_{D,i}');
 title('C_{D,i} Convergence vs. Number of Odd Terms');
 legend('C_{D,i}', '10% error', '1% error', '0.1% error', 'Location', 'east');
 grid on;
-
-% print('D2_convergence', '-dpng', '-r500');
+print('CDi_convergence', '-dpng', '-r500');
 
 %  Find L, Di and L/D with standard atmosphere at 10,000 ft, 100 knots
 
@@ -670,7 +670,7 @@ xlabel('Angle of Attack \alpha [deg]');
 ylabel('Drag Coefficient');
 title('Drag Coefficient vs. Angle of Attack — Cessna 140 Wing');
 legend('Location', 'northwest'); grid on;
-% print('D4_drag_breakdown', '-dpng', '-r500');
+print('D4_drag_profile', '-dpng', '-r500');
 
 % L/D plot
 figure();
@@ -679,7 +679,7 @@ xlabel('Angle of Attack \alpha [deg]');
 ylabel('L/D');
 title('L/D vs. Angle of Attack');
 grid on;
-% print('D5_LD_ratio', '-dpng', '-r500');
+print('D5_LD_ratio', '-dpng', '-r500');
 
 
 %% User Defined Functions
