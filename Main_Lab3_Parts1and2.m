@@ -594,7 +594,7 @@ print('CDi_convergence', '-dpng', '-r500');
 
 alt_m = 10000;
 % standard atmosphere density 
-rho = .001736; %slugs/ft^3
+rho = .00173; %slugs/ft^3
 V_ft = 100 * 1.6878; % knots to ft/s 
 
 alt_ft = 10000;   % altitude [ft]
